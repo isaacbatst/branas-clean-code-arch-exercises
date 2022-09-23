@@ -3,7 +3,7 @@ export function validate (str) {
 
 	if (str !== null) {
         if (str !== undefined) {
-            if (str.length >= 11 || str.length <= 14){
+            if (str.length >= 11 && str.length <= 14){
 
                 str=str
                     .replace('.','')
