@@ -11,28 +11,33 @@ it('should return true with valid and rests bellow 2', () => {
 })
 
 it('should return false if all numbers are the same', () => {
-  const isValid = validateCpf('111.111.111-11');
-  expect(isValid).toBe(false);
+  expect(() => {
+    validateCpf('111.111.111-11')
+  }).toThrow('INVALID_CPF_WITH_SAME_NUMBER')
 })
 
 it('should return false if string is bellow 11 characters', () => {
-  const isValid = validateCpf('111.111.11');
-  expect(isValid).toBe(false);
+  expect(() => {
+    validateCpf('111.111.11')
+  }).toThrow('INVALID_CPF_SIZE')
 })
 
 it('should return false if string is above 14 characters', () => {
-  const isValid = validateCpf('111.111.111-111');
-  expect(isValid).toBe(false);
+  expect(() => {
+    validateCpf('111.111.111-111-111')
+  }).toThrow('INVALID_CPF_SIZE')
 })
 
 it('should return undefined if string is undefined', () => {
-  const isValid = validateCpf(undefined);
-  expect(isValid).toBe(false);
+  expect(() => {
+    validateCpf(undefined)
+  }).toThrow('EMPTY_CPF')
 })
 
 it('should return false if string is null', () => {
-  const isValid = validateCpf(null);
-  expect(isValid).toBe(false);
+  expect(() => {
+    validateCpf(null)
+  }).toThrow('EMPTY_CPF')
 })
 
 it('should return false if some error is throwed inside try', () => {
@@ -41,6 +46,7 @@ it('should return false if some error is throwed inside try', () => {
       throw new Error();
     })
   
-  const isValid = validateCpf('111.111.112-00');
-  expect(isValid).toBe(false)
+    expect(() => {
+      validateCpf('111.444.777-35')
+    }).toThrow('UNKNOWN_ERROR')
 })

@@ -56,21 +56,16 @@ const MIN_CPF_LENGTH = 11;
 const MAX_CPF_LENGTH = 14;
 
 export function validateCpf (cpf) {
-    if(!cpf) return false;
-    if(cpf.length < MIN_CPF_LENGTH || cpf.length > MAX_CPF_LENGTH) {
-        return false;
-    }
+    if(!cpf) throw new Error('EMPTY_CPF');
+    if(cpf.length < MIN_CPF_LENGTH || cpf.length > MAX_CPF_LENGTH) throw new Error('INVALID_CPF_SIZE')
     const cpfNumbers = removeNonNumericCharacters(cpf);
-    if(areAllNumbersTheSame(cpfNumbers)){
-        return false;
-    }
+    if(areAllNumbersTheSame(cpfNumbers)) throw new Error('INVALID_CPF_WITH_SAME_NUMBER')
     try{  
         const digitsCalculated = calculateDigits(cpfNumbers);
         const digitsReceived = cpfNumbers
             .substring(cpfNumbers.length-2, cpfNumbers.length);  
         return digitsReceived === digitsCalculated;
     }catch (e){  
-        console.error("Erro !"+e);  
-        return false;  
+        throw new Error('UNKNOWN_ERROR')  
     }  
 }
