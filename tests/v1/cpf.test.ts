@@ -1,4 +1,4 @@
-import { validate } from '../src/v1/cpf';
+import { validate } from '../../src/v1/cpf';
 
 it('should return true with valid cpf', () => {
   const isValid = validate('111.444.777-35');
