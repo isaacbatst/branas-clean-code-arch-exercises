@@ -18,6 +18,11 @@ export default class Order {
 	}
 
 	addCoupon (coupon: Coupon) {
+		const now = new Date();
+		if(coupon.expirationDate.getTime() < now.getTime()) {
+			throw new Error('Cupom expirado')
+		} 
+
 		this.coupon = coupon;
 	}
 
