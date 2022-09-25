@@ -17,3 +17,15 @@ test.each(negativeDimensions)('Não deve criar um item com dimensões negativas'
     })
   }).toThrowError('Dimensão negativa')
 })
+
+test('Não deve criar um item com peso negativo', () => {
+  expect(() => {
+    new Item({
+      description: 'Guitarra',
+      dimensions: { height: 10, width: 10, depth: 10 },
+      id: 1,
+      price: 10,
+      weight: -1
+    })
+  }).toThrow('Peso negativo')
+})

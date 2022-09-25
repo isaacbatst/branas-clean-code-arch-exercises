@@ -22,6 +22,7 @@ export default class Item {
 		params: ItemParams
 	) {
 		if(this.isSomeDimensionNegative(params.dimensions)) throw new Error('Dimensão negativa')
+		if(params.weight < 0) throw new Error('Peso negativo')
 
 		this.idItem = params.id;
 		this.description = params.description;
