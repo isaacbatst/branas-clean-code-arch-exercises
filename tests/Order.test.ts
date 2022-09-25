@@ -40,3 +40,10 @@ test("Não deve aplicar um cupom de desconto expirado", function () {
 		order.addCoupon(new Coupon("VALE20", 20, yesterday));
 	}).toThrowError('Cupom expirado')
 })
+
+test("Ao fazer um pedido, a quantidade de um item não pode ser negativa", function() {
+	expect(() => {
+		const order = new Order("317.153.361-86");
+		order.addItem(new Item(1, "Guitarra", 1000), -1);
+	}).toThrow('Quantidade não pode ser negativa')
+})
