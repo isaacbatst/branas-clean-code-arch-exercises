@@ -1,10 +1,10 @@
-interface Dimensions {
+export interface Dimensions {
 	height: number;
 	width: number;
 	depth: number;
 }
 
-interface ItemParams {
+export interface ItemParams {
 	id: number,
 	description: string,
 	price: number,
