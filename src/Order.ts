@@ -1,16 +1,19 @@
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
-import Item from "./Item";
+import Item, { Dimensions } from "./Item";
 import OrderItem from "./OrderItem";
+import Shipping from "./Shipping";
 
 export default class Order {
 	cpf: Cpf;
 	orderItems: OrderItem[];
 	coupon?: Coupon;
+	private shipping: Shipping;
 
 	constructor (cpf: string) {
 		this.cpf = new Cpf(cpf);
 		this.orderItems = [];
+		this.shipping = new Shipping();
 	}
 	
 	addItem (item: Item, quantity: number) {
@@ -19,6 +22,7 @@ export default class Order {
 		if(isSomeEqual) throw new Error('Item duplicado');
 
 		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
+		this.shipping.incrementValue(item.dimensions, item.weight);
 	}
 
 	addCoupon (coupon: Coupon) {
@@ -39,5 +43,9 @@ export default class Order {
 			total -= this.coupon.calculateDiscount(total);
 		}
 		return total;
+	}
+
+	getShipping () {
+		return this.shipping.getValue();
 	}
 }

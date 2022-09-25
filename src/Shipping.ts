@@ -33,13 +33,21 @@ import { Dimensions } from "./Item";
 // preço mínimo: R$10,00
 
 export default class Shipping {
-  readonly value: number;
+  private value: number;
 
-  constructor(dimensions: Dimensions, weight: number, distance: number = 1000) {
+  constructor() {
+    this.value = 0
+  }
+
+  public incrementValue(dimensions: Dimensions, weight: number, distance: number = 1000) {
     const { depth, height, width } = dimensions;
     const volume = depth * height * width;
     const density = weight / volume
     const result = distance * volume * (density / 100)
-    this.value = Number(result.toFixed(2))
+    this.value += Number(result.toFixed(2))
+  }
+  
+  public getValue() {
+    return this.value
   }
 }
