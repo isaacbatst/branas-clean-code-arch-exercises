@@ -15,5 +15,5 @@ test.each(negativeDimensions)('Não deve criar um item com dimensões negativas'
       price: 10,
       weight: 20,
     })
-  })
+  }).toThrowError('Dimensão negativa')
 })

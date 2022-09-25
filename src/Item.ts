@@ -21,7 +21,7 @@ export default class Item {
 	constructor (
 		params: ItemParams
 	) {
-		if(this.isSomeDimensionNegative(params.dimensions)) throw new Error('')
+		if(this.isSomeDimensionNegative(params.dimensions)) throw new Error('Dimensão negativa')
 
 		this.idItem = params.id;
 		this.description = params.description;
