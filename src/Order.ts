@@ -14,6 +14,10 @@ export default class Order {
 	}
 	
 	addItem (item: Item, quantity: number) {
+		const isSomeEqual = this.orderItems.some(orderItem => orderItem.idItem === item.idItem);
+
+		if(isSomeEqual) throw new Error('Item duplicado');
+
 		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
 	}
 

@@ -47,3 +47,11 @@ test("Ao fazer um pedido, a quantidade de um item não pode ser negativa", funct
 		order.addItem(new Item(1, "Guitarra", 1000), -1);
 	}).toThrow('Quantidade não pode ser negativa')
 })
+
+test("Ao fazer um pedido, o mesmo item não pode ser informado mais de uma vez", function() {
+	expect(() => {
+		const order = new Order("317.153.361-86");
+		order.addItem(new Item(1, "Guitarra", 1000), 1);
+		order.addItem(new Item(1, "Guitarra", 1000), 1);
+	}).toThrowError("Item duplicado")
+})
