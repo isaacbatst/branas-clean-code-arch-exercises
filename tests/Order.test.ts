@@ -5,25 +5,21 @@ import Order from "../src/Order";
 const guitar = {
 	id: 1, 
 	description: 'Guitarra', 
-	dimensions: {
-		depth: 5,
-		height: 100,
-		width: 40
-	},
+	dimensions: { depth: 10, height: 100, width: 30 },
 	price: 1000,
-	weight: 2
+	weight: 3
 }
 
 const amp = {
 	id: 2, 
 	description: 'amp', 
 	dimensions: {
-		depth: 5,
-		height: 100,
-		width: 40
+		depth: 8,
+		height: 15,
+		width: 14
 	},
 	price: 5000,
-	weight: 2
+	weight: 1
 }
 
 const cable = {
@@ -90,4 +86,17 @@ test("Ao fazer um pedido, o mesmo item não pode ser informado mais de uma vez",
 		order.addItem(new Item(guitar), 1);
 		order.addItem(new Item(guitar), 1);
 	}).toThrowError("Item duplicado")
+})
+
+test("Ao fazer um pedido, deve calcular o frete", function() {
+		const order = new Order("317.153.361-86");
+		order.addItem(new Item(guitar), 1);
+		expect(order.getShipping()).toBe(30)
+})
+
+test("Ao fazer um pedido, com mais de um item deve calcular os fretes somados", function() {
+	const order = new Order("317.153.361-86");
+	order.addItem(new Item(guitar), 1);
+	order.addItem(new Item(amp), 1);
+	expect(order.getShipping()).toBe(40)
 })
