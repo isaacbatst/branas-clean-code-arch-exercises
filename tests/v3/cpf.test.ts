@@ -1,29 +1,30 @@
-import { Cpf } from '../../src/v3/Cpf';
+import Cpf from "../../src/v3/Cpf";
 
-it('should return an instance with a valid cpf', () => {
-  const cpf = new Cpf('111.444.777-35');
-  expect(cpf).toBeInstanceOf(Cpf)
-})
+const validCpfs = [
+	"317.153.361-86",
+	"198.454.187-08",
+	"147.085.437-60"
+];
 
-it('should return an instance with valid cpf and rests bellow 2', () => {
-  const cpf = new Cpf('111.111.112-00');
-  expect(cpf).toBeInstanceOf(Cpf)
-})
+test.each(validCpfs)("Deve validar o cpf", function (validCpf) {
+	const cpf = new Cpf(validCpf);
+	expect(cpf).toBeDefined();
+});
 
-it('should throw INVALID_CPF_WITH_SAME_NUMBER if all numbers are the same', () => {
-  expect(() => {
-    new Cpf('111.111.111-11')
-  }).toThrow('INVALID_CPF_WITH_SAME_NUMBER')
-})
+test("Deve tentar validar o cpf com mais de 14 caracteres", function () {
+	expect(() => new Cpf("147.085.437-600")).toThrow(new Error("Cpf inválido"));
+});
 
-it('should throw INVALID_CPF_SIZE if string is bellow 11 characters', () => {
-  expect(() => {
-    new Cpf('111.111.11')
-  }).toThrow('INVALID_CPF_SIZE')
-})
+const cpfsWithSameDigit = [
+	"111.111.111-11",
+	"222.222.222-22",
+	"333.333.333-33"
+];
 
-it('should throw INVALID_CPF_SIZE if string is above 14 characters', () => {
-  expect(() => {
-    new Cpf('111.111.111-111-111')
-  }).toThrow('INVALID_CPF_SIZE')
-})
+test.each(cpfsWithSameDigit)("Deve tentar validar um cpf com todos os dígitos iguais", function (cpf) {
+	expect(() => new Cpf(cpf)).toThrow(new Error("Cpf inválido"));
+});
+
+test("Deve validar o cpf com letras", function () {
+	expect(() =>  new Cpf("abc")).toThrow(new Error("Cpf inválido"));
+});
