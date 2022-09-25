@@ -21,10 +21,16 @@ export default class Item {
 	constructor (
 		params: ItemParams
 	) {
+		if(this.isSomeDimensionNegative(params.dimensions)) throw new Error('')
+
 		this.idItem = params.id;
 		this.description = params.description;
 		this.price = params.price;
 		this.weight = params.weight;
 		this.dimensions = params.dimensions
+	}
+
+	private isSomeDimensionNegative(dimensions: Dimensions) {
+		return dimensions.depth < 0 || dimensions.height < 0 || dimensions.width < 0
 	}
 }
