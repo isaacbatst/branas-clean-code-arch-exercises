@@ -8,7 +8,7 @@
 4 - Nenhuma dimensão do item pode ser negativa
 5 - O peso do item não pode ser negativo
 6 - Deve calcular o valor do frete com base nas dimensões (altura, largura e profundidade em cm) e o peso dos produtos (em kg)
-7 - Deve retornar o preço mínimo de frete caso ele seja superior ao valor calculado
+7 - Deve retornar o preço mínimo de frete caso ele seja inferior ao valor calculado
 
 
 ## Considere
