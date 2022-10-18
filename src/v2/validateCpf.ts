@@ -52,6 +52,9 @@ const calculateDigits = (cpf) => {
     return String(firstDigit) + String(secondDigit)
 }
 
+const extractCpfDigits = (cpfNumbers) => cpfNumbers
+    .substring(cpfNumbers.length-2, cpfNumbers.length)
+
 const MIN_CPF_LENGTH = 11;
 const MAX_CPF_LENGTH = 14;
 
@@ -62,8 +65,7 @@ export function validateCpf (cpf) {
     if(areAllNumbersTheSame(cpfNumbers)) throw new Error('INVALID_CPF_WITH_SAME_NUMBER')
     try{  
         const digitsCalculated = calculateDigits(cpfNumbers);
-        const digitsReceived = cpfNumbers
-            .substring(cpfNumbers.length-2, cpfNumbers.length);  
+        const digitsReceived = extractCpfDigits(cpfNumbers)
         return digitsReceived === digitsCalculated;
     }catch (e){  
         throw new Error('UNKNOWN_ERROR')  
