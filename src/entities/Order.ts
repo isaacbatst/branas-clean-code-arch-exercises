@@ -1,20 +1,22 @@
 import type Coupon from './Coupon';
 import Cpf from './Cpf';
 import type Item from './Item';
-import {Dimensions} from './Item';
+import {OrderCodeGenerator} from './OrderCodeGenerator';
 import OrderItem from './OrderItem';
 import Shipping from './Shipping';
 
 export default class Order {
-	cpf: Cpf;
-	orderItems: OrderItem[];
-	coupon?: Coupon;
+	readonly cpf: Cpf;
+	readonly orderItems: OrderItem[];
+	readonly code: string;
+	private coupon?: Coupon;
 	private readonly shipping: Shipping;
 
 	constructor(cpf: string) {
 		this.cpf = new Cpf(cpf);
 		this.orderItems = [];
 		this.shipping = new Shipping();
+		this.code = 'OrderCodeGenerator.generate()';
 	}
 
 	addItem(item: Item, quantity: number) {
