@@ -12,7 +12,10 @@
             "files": [
                 "*.ts",
                 "*.tsx"
-            ]
+            ],
+            "rules": {
+                "@typescript-eslint/no-extraneous-class": ["error", {  "allowStaticOnly": true }]
+            }
         }
     ],
     "parserOptions": {
