@@ -1,5 +1,5 @@
-import { Dimensions } from "../src/Item";
-import Shipping from "../src/Shipping";
+import { Dimensions } from "../src/entities/Item";
+import Shipping from "../src/entities/Shipping";
 
 const items: { expected: number, dimensions: Dimensions, weight: number }[] = [
   {

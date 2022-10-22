@@ -1,4 +1,4 @@
-import Item from "../src/Item"
+import Item from "../src/entities/Item"
 
 const negativeDimensions = [
   { height: -1, width: 10, depth: 10 },
