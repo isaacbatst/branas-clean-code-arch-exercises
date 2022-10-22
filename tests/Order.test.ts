@@ -58,7 +58,10 @@ test("Deve criar um pedido com 3 itens com cupom de desconto", function () {
 	order.addItem(new Item(guitar), 1);
 	order.addItem(new Item(amp), 1);
 	order.addItem(new Item(cable), 3);
-	order.addCoupon(new Coupon("VALE20", 20, new Date()));
+	
+	const tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	order.addCoupon(new Coupon("VALE20", 20, tomorrow));
 	const total = order.getTotal();
 	expect(total).toBe(4872);
 });
