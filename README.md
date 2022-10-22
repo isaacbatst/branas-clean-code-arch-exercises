@@ -13,7 +13,6 @@
 
 ## Considere
 
-
 - O valor mínimo é de R$10,00
 - Por enquanto, como não temos uma forma de calcular a distância entre o CEP de origem e destino, será de 1000 km (fixo)
 - Utilize a fórmula abaixo para calcular o valor do frete
