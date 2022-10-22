@@ -9,14 +9,16 @@ export default class Order {
 	readonly cpf: Cpf;
 	readonly orderItems: OrderItem[];
 	readonly code: string;
+	readonly date: Date;
 	private coupon?: Coupon;
 	private readonly shipping: Shipping;
 
-	constructor(cpf: string) {
+	constructor(cpf: string, date: Date, ordersCount: number) {
 		this.cpf = new Cpf(cpf);
 		this.orderItems = [];
 		this.shipping = new Shipping();
-		this.code = 'OrderCodeGenerator.generate()';
+		this.date = date;
+		this.code = OrderCodeGenerator.generate(date, ordersCount);
 	}
 
 	addItem(item: Item, quantity: number) {
@@ -31,8 +33,7 @@ export default class Order {
 	}
 
 	addCoupon(coupon: Coupon) {
-		const now = new Date();
-		if (coupon.expirationDate.getTime() < now.getTime()) {
+		if (coupon.expirationDate.getTime() < this.date.getTime()) {
 			throw new Error('Cupom expirado');
 		}
 
