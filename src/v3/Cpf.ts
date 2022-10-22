@@ -1,11 +1,13 @@
-import { CpfDigits } from "./CpfDigits";
+import { DigitsCalculator } from "./DigitsCalculator";
 
 
 export class Cpf {
   private value: string;
   static readonly MIN_LENGTH = 11;
   static readonly MAX_LENGTH = 14;
-  
+  static readonly FIRST_DIGIT_MULTIPLIER = 11;  
+  static readonly SECOND_DIGIT_MULTIPLIER = 12;
+
   constructor(value: string) {
     if(!value) throw new Error('EMPTY_CPF');
     if(value.length < Cpf.MIN_LENGTH || value.length > Cpf.MAX_LENGTH) {
@@ -18,8 +20,8 @@ export class Cpf {
   private  validateCpf() {
     if(this.isEveryNumberEqual()) throw new Error('INVALID_CPF_WITH_SAME_NUMBER')
     const digitsReceived = this.getCpfDigits();
-    const digitsCalculated = new CpfDigits(this.value);
-    return digitsReceived === digitsCalculated.getDigits();
+    const digitsCalculated = DigitsCalculator.calculateDigits(this.value);
+    return digitsReceived === digitsCalculated;
   }
   
   private getCpfDigits() {
