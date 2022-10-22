@@ -1,7 +1,7 @@
 
 // ## Considere
 
-import { Dimensions } from "./Item";
+import type {Dimensions} from './Item';
 
 // - O valor mínimo é de R$10,00
 // - Por enquanto, como não temos uma forma de calcular a distância entre o CEP de origem e destino, será de 1000 km (fixo)
@@ -33,21 +33,21 @@ import { Dimensions } from "./Item";
 // preço mínimo: R$10,00
 
 export default class Shipping {
-  private value: number;
+	private value: number;
 
-  constructor() {
-    this.value = 0
-  }
+	constructor() {
+		this.value = 0;
+	}
 
-  public incrementValue(dimensions: Dimensions, weight: number, distance: number = 1000) {
-    const { depth, height, width } = dimensions;
-    const volume = depth * height * width;
-    const density = weight / volume
-    const result = distance * volume * (density / 100)
-    this.value += Number(result.toFixed(2))
-  }
-  
-  public getValue() {
-    return this.value
-  }
+	public incrementValue(dimensions: Dimensions, weight: number, distance = 1000) {
+		const {depth, height, width} = dimensions;
+		const volume = depth * height * width;
+		const density = weight / volume;
+		const result = distance * volume * (density / 100);
+		this.value += Number(result.toFixed(2));
+	}
+
+	public getValue() {
+		return this.value;
+	}
 }
