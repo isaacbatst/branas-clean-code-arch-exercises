@@ -45,20 +45,6 @@ test('Ao criar pedido deve usar data atual e contagem do banco', async () => {
 	expect(created.code).toBe(`${year}00000001`);
 });
 
-test('Ao criar pedido deve somar o frete dos itens', async () => {
-	const {createOrder} = makeSut();
-
-	const created = await createOrder.execute({
-		cpf: '317.153.361-86',
-		items: [
-			{...amp, quantity: 1},
-			{...guitar, quantity: 1},
-		],
-	});
-
-	expect(created.shipping).toBe(40);
-});
-
 test('Ao criar o pedido deve calcular o total', async () => {
 	const {createOrder} = makeSut();
 

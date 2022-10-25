@@ -11,7 +11,6 @@ type Input = {
 
 type Output = {
 	code: string;
-	shipping: number;
 	total: number;
 };
 
@@ -53,7 +52,6 @@ export class CreateOrder {
 
 		return {
 			code: order.code,
-			shipping: order.getShipping(),
 			total: order.getTotal(),
 		};
 	}
