@@ -21,7 +21,7 @@ const items: Array<{expected: number; dimensions: Dimensions; weight: number}> =
 
 test.each(items)('Deve calcular o frete', item => {
 	const shipping = new Shipping();
-	shipping.incrementValue(item.dimensions, item.weight);
+	shipping.addItem(item.dimensions, item.weight);
 
 	expect(shipping.getValue()).toBe(item.expected);
 });

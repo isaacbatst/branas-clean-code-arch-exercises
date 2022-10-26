@@ -29,7 +29,7 @@ export default class Order {
 		}
 
 		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
-		this.shipping.incrementValue(item.dimensions, item.weight);
+		this.shipping.addItem(item.dimensions, item.weight);
 	}
 
 	addCoupon(coupon: Coupon) {

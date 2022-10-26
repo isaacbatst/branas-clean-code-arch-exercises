@@ -39,7 +39,7 @@ export default class Shipping {
 		this.value = 0;
 	}
 
-	public incrementValue(dimensions: Dimensions, weight: number, distance = 1000) {
+	public addItem(dimensions: Dimensions, weight: number, distance = 1000) {
 		const {depth, height, width} = dimensions;
 		const volume = depth * height * width;
 		const density = weight / volume;
