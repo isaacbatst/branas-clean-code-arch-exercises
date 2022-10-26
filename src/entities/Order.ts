@@ -1,4 +1,5 @@
 import type Coupon from './Coupon';
+import {CouponValidator} from './CouponValidator';
 import Cpf from './Cpf';
 import type Item from './Item';
 import {OrderCodeGenerator} from './OrderCodeGenerator';
@@ -33,9 +34,7 @@ export default class Order {
 	}
 
 	addCoupon(coupon: Coupon) {
-		if (coupon.expirationDate.getTime() < this.date.getTime()) {
-			throw new Error('Cupom expirado');
-		}
+		CouponValidator.validate(coupon, this.date);
 
 		this.coupon = coupon;
 	}

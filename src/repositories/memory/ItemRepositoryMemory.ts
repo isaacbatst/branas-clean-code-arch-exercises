@@ -1,5 +1,5 @@
-import type Item from '../entities/Item';
-import type {ItemRepository} from '../usecases/SimulateShipping';
+import type Item from '../../entities/Item';
+import type {ItemRepository} from '../interfaces/ItemRepository';
 
 export class ItemRepositoryMemory implements ItemRepository {
 	private readonly items: Item[] = [];

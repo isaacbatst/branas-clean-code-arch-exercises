@@ -1,6 +1,6 @@
 import Coupon from '../src/entities/Coupon';
-import {CouponRepositoryMemory} from '../src/repositories/CouponRepositoryMemory';
-import {OrderRepositoryMemory} from '../src/repositories/OrderRepositoryMemory';
+import {CouponRepositoryMemory} from '../src/repositories/memory/CouponRepositoryMemory';
+import {OrderRepositoryMemory} from '../src/repositories/memory/OrderRepositoryMemory';
 import {CreateOrder} from '../src/usecases/CreateOrder';
 
 const guitar = {

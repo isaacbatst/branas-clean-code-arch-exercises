@@ -1,5 +1,5 @@
 import Item from '../src/entities/Item';
-import {ItemRepositoryMemory} from '../src/repositories/ItemRepositoryMemory';
+import {ItemRepositoryMemory} from '../src/repositories/memory/ItemRepositoryMemory';
 import {SimulateShipping} from '../src/usecases/SimulateShipping';
 
 const guitar = {

@@ -1,5 +1,5 @@
-import type Order from '../entities/Order';
-import type {OrderRepository} from '../usecases/CreateOrder';
+import type Order from '../../entities/Order';
+import type {OrderRepository} from '../interfaces/OrderRepository';
 
 export class OrderRepositoryMemory implements OrderRepository {
 	orders: Order[] = [];

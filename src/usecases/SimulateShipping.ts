@@ -1,13 +1,9 @@
-import type Item from '../entities/Item';
 import Shipping from '../entities/Shipping';
+import type {ItemRepository} from '../repositories/interfaces/ItemRepository';
 
 type Input = Array<{
 	id: number;
 }>;
-
-export type ItemRepository = {
-	getById(id: number): Promise<Item | undefined>;
-};
 
 export class SimulateShipping {
 	constructor(

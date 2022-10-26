@@ -1,5 +1,5 @@
-import type Coupon from '../entities/Coupon';
-import type {CouponRepository} from '../usecases/CreateOrder';
+import type Coupon from '../../entities/Coupon';
+import type {CouponRepository} from '../interfaces/CouponRepository';
 
 export class CouponRepositoryMemory implements CouponRepository {
 	coupons: Coupon[] = [];
