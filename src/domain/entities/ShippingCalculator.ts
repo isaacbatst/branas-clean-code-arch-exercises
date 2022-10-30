@@ -58,7 +58,7 @@ export default class ShippingCalculator {
 		const density = item.weight / volume;
 		const shipping = distance * volume * (density / 100);
 
-		if (shipping < ShippingCalculator.minShipping) {
+		if (shipping <= ShippingCalculator.minShipping) {
 			return this.minShipping;
 		}
 
