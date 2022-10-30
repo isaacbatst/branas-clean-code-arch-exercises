@@ -1,6 +1,6 @@
-import type Order from '../../entities/Order';
-import prisma from '../../infra/prisma';
-import type {OrderRepository} from '../interfaces/OrderRepository';
+import type Order from '../../../domain/entities/Order';
+import prisma from './prisma';
+import type {OrderRepository} from '../../../domain/repositories/OrderRepository';
 
 export class OrderRepositoryPrisma implements OrderRepository {
 	async getCount(): Promise<number> {

@@ -1,6 +1,6 @@
-import Item from '../../entities/Item';
-import prisma from '../../infra/prisma';
-import type {ItemRepository} from '../interfaces/ItemRepository';
+import Item from '../../../domain/entities/Item';
+import prisma from './prisma';
+import type {ItemRepository} from '../../../domain/repositories/ItemRepository';
 
 export class ItemRepositoryPrisma implements ItemRepository {
 	async getById(id: number): Promise<Item | undefined> {

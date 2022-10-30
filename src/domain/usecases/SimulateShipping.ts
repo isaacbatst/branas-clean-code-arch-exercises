@@ -1,5 +1,5 @@
-import Shipping from '../entities/Shipping';
-import type {ItemRepository} from '../repositories/interfaces/ItemRepository';
+import Shipping from '../../entities/Shipping';
+import type {ItemRepository} from '../repositories/ItemRepository';
 
 type Input = Array<{
 	id: number;

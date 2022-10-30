@@ -1,4 +1,4 @@
-import type Order from '../../entities/Order';
+import type Order from '../entities/Order';
 
 export type OrderRepository = {
 	getCount(): Promise<number>;

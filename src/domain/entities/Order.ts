@@ -3,8 +3,8 @@ import {CouponValidator} from './CouponValidator';
 import Cpf from './Cpf';
 import type Item from './Item';
 import {OrderCodeGenerator} from './OrderCodeGenerator';
-import OrderItem from './OrderItem';
-import Shipping from './Shipping';
+import OrderItem from '../../entities/OrderItem';
+import Shipping from '../../entities/Shipping';
 
 export default class Order {
 	readonly cpf: Cpf;

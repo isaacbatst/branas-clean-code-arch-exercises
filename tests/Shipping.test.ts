@@ -1,4 +1,4 @@
-import {Dimensions} from '../src/entities/Dimensions';
+import {Dimensions} from '../src/domain/entities/Dimensions';
 import Shipping from '../src/entities/Shipping';
 
 const items: Array<{expected: number; dimensions: Dimensions; weight: number}> = [

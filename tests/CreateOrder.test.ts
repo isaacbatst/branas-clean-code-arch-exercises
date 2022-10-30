@@ -1,7 +1,7 @@
-import Coupon from '../src/entities/Coupon';
-import {CouponRepositoryMemory} from '../src/repositories/memory/CouponRepositoryMemory';
-import {OrderRepositoryMemory} from '../src/repositories/memory/OrderRepositoryMemory';
-import {CreateOrder} from '../src/usecases/CreateOrder';
+import Coupon from '../src/domain/entities/Coupon';
+import {CouponRepositoryMemory} from '../src/infra/persistence/memory/CouponRepositoryMemory';
+import {OrderRepositoryMemory} from '../src/infra/persistence/memory/OrderRepositoryMemory';
+import {CreateOrder} from '../src/domain/usecases/CreateOrder';
 
 const guitar = {
 	id: 1,
