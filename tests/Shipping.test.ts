@@ -1,20 +1,20 @@
-import type {Dimensions} from '../src/entities/Item';
+import {Dimensions} from '../src/entities/Dimensions';
 import Shipping from '../src/entities/Shipping';
 
 const items: Array<{expected: number; dimensions: Dimensions; weight: number}> = [
 	{
 		expected: 30,
-		dimensions: {depth: 10, height: 100, width: 30},
+		dimensions: new Dimensions(100, 30, 10),
 		weight: 3,
 	},
 	{
 		expected: 10,
-		dimensions: {depth: 10, height: 15, width: 20},
+		dimensions: new Dimensions(15, 20, 10),
 		weight: 1,
 	},
 	{
 		expected: 400,
-		dimensions: {depth: 50, height: 200, width: 100},
+		dimensions: new Dimensions(200, 100, 50),
 		weight: 40,
 	},
 ];

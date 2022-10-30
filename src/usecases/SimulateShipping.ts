@@ -17,7 +17,7 @@ export class SimulateShipping {
 			const item = await this.itemRepository.getById(id);
 
 			if (!item) {
-				throw new Error('ITEM_NOT_FOUND');
+				throw new Error('Item não encontrado.');
 			}
 
 			shipping.addItem(item.dimensions, item.weight);

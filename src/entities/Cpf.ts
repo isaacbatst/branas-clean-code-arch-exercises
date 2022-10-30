@@ -6,11 +6,8 @@ export default class Cpf {
 	}
 
 	private validate(cpf: string) {
-		if (!cpf) {
-			return false;
-		}
-
 		cpf = this.cleanCpf(cpf);
+
 		if (!this.isValidLength(cpf)) {
 			return false;
 		}

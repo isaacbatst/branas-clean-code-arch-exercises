@@ -1,16 +1,15 @@
-export type Dimensions = {
-	height: number;
-	width: number;
-	depth: number;
-};
+import {Dimensions} from './Dimensions';
 
 export type ItemParams = {
 	id: number;
 	description: string;
 	price: number;
-	dimensions: Dimensions;
 	weight: number;
+	height: number;
+	width: number;
+	depth: number;
 };
+
 export default class Item {
 	readonly idItem: number;
 	readonly description: string;
@@ -21,22 +20,14 @@ export default class Item {
 	constructor(
 		params: ItemParams,
 	) {
-		if (this.isSomeDimensionNegative(params.dimensions)) {
-			throw new Error('Dimensão negativa');
-		}
-
-		if (params.weight < 0) {
-			throw new Error('Peso negativo');
-		}
-
 		this.idItem = params.id;
 		this.description = params.description;
 		this.price = params.price;
 		this.weight = params.weight;
-		this.dimensions = params.dimensions;
-	}
+		this.dimensions = new Dimensions(params.height, params.width, params.depth);
 
-	private isSomeDimensionNegative(dimensions: Dimensions) {
-		return dimensions.depth < 0 || dimensions.height < 0 || dimensions.width < 0;
+		if (params.weight < 0) {
+			throw new Error('Peso negativo');
+		}
 	}
 }

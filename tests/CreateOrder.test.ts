@@ -6,7 +6,9 @@ import {CreateOrder} from '../src/usecases/CreateOrder';
 const guitar = {
 	id: 1,
 	description: 'Guitarra',
-	dimensions: {depth: 10, height: 100, width: 30},
+	depth: 10,
+	height: 100,
+	width: 30,
 	price: 1000,
 	weight: 3,
 };
@@ -14,11 +16,9 @@ const guitar = {
 const amp = {
 	id: 2,
 	description: 'amp',
-	dimensions: {
-		depth: 8,
-		height: 15,
-		width: 14,
-	},
+	depth: 8,
+	height: 15,
+	width: 14,
 	price: 5000,
 	weight: 1,
 };
@@ -75,4 +75,19 @@ test('Ao criar o pedido com cupom de desconto deve calcular o total', async () =
 	});
 
 	expect(created.total).toBe(4832);
+});
+
+test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
+	const {createOrder} = makeSut();
+
+	await expect(async () => {
+		await createOrder.execute({
+			cpf: '317.153.361-86',
+			items: [
+				{...amp, quantity: 1},
+				{...guitar, quantity: 1},
+			],
+			coupon: 'VALE20',
+		});
+	}).rejects.toThrow('Cupom não encontrado');
 });

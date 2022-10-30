@@ -5,7 +5,9 @@ import Order from '../src/entities/Order';
 const guitar = {
 	id: 1,
 	description: 'Guitarra',
-	dimensions: {depth: 10, height: 100, width: 30},
+	depth: 10,
+	height: 100,
+	width: 30,
 	price: 1000,
 	weight: 3,
 };
@@ -13,11 +15,9 @@ const guitar = {
 const amp = {
 	id: 2,
 	description: 'amp',
-	dimensions: {
-		depth: 8,
-		height: 15,
-		width: 14,
-	},
+	depth: 8,
+	height: 15,
+	width: 14,
 	price: 5000,
 	weight: 1,
 };
@@ -25,11 +25,9 @@ const amp = {
 const cable = {
 	id: 3,
 	description: 'cabo',
-	dimensions: {
-		depth: 5,
-		height: 100,
-		width: 40,
-	},
+	depth: 5,
+	height: 100,
+	width: 40,
 	price: 30,
 	weight: 5,
 };
