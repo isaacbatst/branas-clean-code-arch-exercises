@@ -1,7 +1,7 @@
+import {Checkout} from '../src/application/Checkout';
 import Coupon from '../src/domain/entities/Coupon';
 import {CouponRepositoryMemory} from '../src/infra/persistence/memory/CouponRepositoryMemory';
 import {OrderRepositoryMemory} from '../src/infra/persistence/memory/OrderRepositoryMemory';
-import {CreateOrder} from '../src/domain/usecases/CreateOrder';
 
 const guitar = {
 	id: 1,
@@ -26,7 +26,7 @@ const amp = {
 const makeSut = () => {
 	const orderRepository = new OrderRepositoryMemory();
 	const couponRepository = new CouponRepositoryMemory();
-	const createOrder = new CreateOrder(orderRepository, couponRepository);
+	const createOrder = new Checkout(orderRepository, couponRepository);
 
 	return {
 		orderRepository,

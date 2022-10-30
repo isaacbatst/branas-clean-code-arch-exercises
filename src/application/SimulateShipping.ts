@@ -1,5 +1,5 @@
-import ShippingCalculator from '../entities/ShippingCalculator';
-import type {ItemRepository} from '../repositories/ItemRepository';
+import ShippingCalculator from '../domain/entities/ShippingCalculator';
+import type {ItemRepository} from '../domain/repositories/ItemRepository';
 
 type Input = Array<{
 	id: number;

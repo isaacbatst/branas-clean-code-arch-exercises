@@ -1,6 +1,6 @@
 import Item from '../src/domain/entities/Item';
 import {ItemRepositoryMemory} from '../src/infra/persistence/memory/ItemRepositoryMemory';
-import {SimulateShipping} from '../src/domain/usecases/SimulateShipping';
+import {SimulateShipping} from '../src/application/SimulateShipping';
 
 const guitar = {
 	id: 1,

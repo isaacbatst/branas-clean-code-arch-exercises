@@ -1,5 +1,5 @@
-import {CouponValidator} from '../entities/CouponValidator';
-import type {CouponRepository} from '../repositories/CouponRepository';
+import {CouponValidator} from '../domain/entities/CouponValidator';
+import type {CouponRepository} from '../domain/repositories/CouponRepository';
 
 export class ValidateCoupon {
 	constructor(

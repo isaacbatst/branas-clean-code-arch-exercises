@@ -1,8 +1,8 @@
-import type {ItemParams} from '../entities/Item';
-import Item from '../entities/Item';
-import Order from '../entities/Order';
-import type {CouponRepository} from '../repositories/CouponRepository';
-import type {OrderRepository} from '../repositories/OrderRepository';
+import type {ItemParams} from '../domain/entities/Item';
+import Item from '../domain/entities/Item';
+import Order from '../domain/entities/Order';
+import type {CouponRepository} from '../domain/repositories/CouponRepository';
+import type {OrderRepository} from '../domain/repositories/OrderRepository';
 
 type Input = {
 	cpf: string;
@@ -15,7 +15,7 @@ type Output = {
 	total: number;
 };
 
-export class CreateOrder {
+export class Checkout {
 	constructor(
 		private readonly orderRepository: OrderRepository,
 		private readonly couponRepository: CouponRepository,
