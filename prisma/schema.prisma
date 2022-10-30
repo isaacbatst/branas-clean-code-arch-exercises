@@ -42,6 +42,7 @@ model OrderItem {
 model Order {
   id         Int         @id @default(autoincrement())
   cpf        String
+  code       String      @unique
   coupon     Coupon      @relation(fields: [couponCode], references: [code])
   couponCode String
   total      Decimal     @db.Decimal(10, 2)

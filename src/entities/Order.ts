@@ -51,4 +51,8 @@ export default class Order {
 
 		return total;
 	}
+
+	getCoupon() {
+		return this.coupon;
+	}
 }
