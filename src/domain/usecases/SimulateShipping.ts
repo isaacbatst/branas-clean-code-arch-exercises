@@ -1,8 +1,9 @@
-import Shipping from '../entities/Shipping';
+import ShippingCalculator from '../entities/ShippingCalculator';
 import type {ItemRepository} from '../repositories/ItemRepository';
 
 type Input = Array<{
 	id: number;
+	quantity: number;
 }>;
 
 export class SimulateShipping {
@@ -11,18 +12,18 @@ export class SimulateShipping {
 	) {}
 
 	async execute(input: Input): Promise<number> {
-		const shipping = new Shipping();
+		let shipping = 0;
 
-		await Promise.all(input.map(async ({id}) => {
+		await Promise.all(input.map(async ({id, quantity}) => {
 			const item = await this.itemRepository.getById(id);
 
 			if (!item) {
 				throw new Error('Item não encontrado.');
 			}
 
-			shipping.addItem(item.dimensions, item.weight);
+			shipping += ShippingCalculator.calculate(item) * quantity;
 		}));
 
-		return shipping.getValue();
+		return shipping;
 	}
 }

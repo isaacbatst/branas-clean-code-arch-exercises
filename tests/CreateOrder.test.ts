@@ -52,11 +52,11 @@ test('Ao criar o pedido deve calcular o total', async () => {
 		cpf: '317.153.361-86',
 		items: [
 			{...amp, quantity: 1},
-			{...guitar, quantity: 1},
+			{...guitar, quantity: 2},
 		],
 	});
 
-	expect(created.total).toBe(6040);
+	expect(created.total).toBe(7070);
 });
 
 test('Ao criar o pedido com cupom de desconto deve calcular o total', async () => {

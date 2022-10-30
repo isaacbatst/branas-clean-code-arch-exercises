@@ -48,7 +48,7 @@ test('Deve criar um pedido com 3 itens', () => {
 	order.addItem(new Item(amp), 1);
 	order.addItem(new Item(cable), 3);
 	const total = order.getTotal();
-	expect(total).toBe(6180);
+	expect(total).toBe(6280);
 });
 
 test('Deve criar um pedido com 3 itens com cupom de desconto', () => {
@@ -61,7 +61,7 @@ test('Deve criar um pedido com 3 itens com cupom de desconto', () => {
 	tomorrow.setDate(tomorrow.getDate() + 1);
 	order.addCoupon(new Coupon('VALE20', 20, tomorrow));
 
-	expect(order.getTotal()).toBe(4944);
+	expect(order.getTotal()).toBe(5024);
 });
 
 test('Não deve aplicar um cupom de desconto expirado', () => {

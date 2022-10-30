@@ -28,8 +28,8 @@ test('Ao simular o frete deve retornar valor', async () => {
 	await itemRepository.addItem(new Item(amp));
 	const simulateShipping = new SimulateShipping(itemRepository);
 	const shippingPrice = await simulateShipping.execute([
-		{id: 1},
-		{id: 2},
+		{id: 1, quantity: 1},
+		{id: 2, quantity: 1},
 	]);
 
 	expect(shippingPrice).toBe(40);
@@ -42,8 +42,8 @@ test('Ao simular frete com produto não existente deve lançar erro', async () =
 
 	await expect(async () => {
 		await simulateShipping.execute([
-			{id: 1},
-			{id: 2},
+			{id: 1, quantity: 1},
+			{id: 2, quantity: 1},
 		]);
 	}).rejects.toThrow('Item não encontrado.');
 });

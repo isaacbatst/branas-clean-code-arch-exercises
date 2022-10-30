@@ -4,7 +4,7 @@ import Cpf from './Cpf';
 import type Item from './Item';
 import {OrderCodeGenerator} from './OrderCodeGenerator';
 import OrderItem from './OrderItem';
-import Shipping from './Shipping';
+import ShippingCalculator from './ShippingCalculator';
 
 export default class Order {
 	readonly cpf: Cpf;
@@ -12,12 +12,12 @@ export default class Order {
 	readonly code: string;
 	readonly date: Date;
 	private coupon?: Coupon;
-	private readonly shipping: Shipping;
+	private shipping: number;
 
 	constructor(cpf: string, date: Date, ordersCount: number) {
 		this.cpf = new Cpf(cpf);
 		this.orderItems = [];
-		this.shipping = new Shipping();
+		this.shipping = 0;
 		this.date = date;
 		this.code = OrderCodeGenerator.generate(date, ordersCount);
 	}
@@ -30,7 +30,7 @@ export default class Order {
 		}
 
 		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
-		this.shipping.addItem(item.dimensions, item.weight);
+		this.shipping += ShippingCalculator.calculate(item) * quantity;
 	}
 
 	addCoupon(coupon: Coupon) {
@@ -43,7 +43,7 @@ export default class Order {
 		let total = this.orderItems
 			.reduce((total, orderItem) => total + orderItem.getTotal(), 0);
 
-		total += this.shipping.getValue();
+		total += this.shipping;
 
 		if (this.coupon) {
 			total -= this.coupon.calculateDiscount(total);
