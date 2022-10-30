@@ -1,4 +1,4 @@
-import {OrderCodeGenerator} from '../src/domain/entities/OrderCodeGenerator';
+import {OrderCodeGenerator} from '../../src/domain/entities/OrderCodeGenerator';
 
 const inputs: Array<{date: Date; count: number; expected: string}> = [
 	{date: new Date('1995-12-17'), count: 0, expected: '199500000001'},

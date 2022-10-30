@@ -1,6 +1,6 @@
-import Coupon from '../src/domain/entities/Coupon';
-import Item from '../src/domain/entities/Item';
-import Order from '../src/domain/entities/Order';
+import Coupon from '../../src/domain/entities/Coupon';
+import Item from '../../src/domain/entities/Item';
+import Order from '../../src/domain/entities/Order';
 
 const guitar = {
 	id: 1,

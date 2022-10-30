@@ -1,6 +1,6 @@
-import {Dimensions} from '../src/domain/entities/Dimensions';
-import type {ShippableItem} from '../src/domain/entities/ShippingCalculator';
-import ShippingCalculator from '../src/domain/entities/ShippingCalculator';
+import {Dimensions} from '../../src/domain/entities/Dimensions';
+import type {ShippableItem} from '../../src/domain/entities/ShippingCalculator';
+import ShippingCalculator from '../../src/domain/entities/ShippingCalculator';
 
 const items: Array<{expected: number; name: string; item: ShippableItem}> = [
 	{
