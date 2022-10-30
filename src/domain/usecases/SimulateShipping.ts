@@ -1,4 +1,4 @@
-import Shipping from '../../entities/Shipping';
+import Shipping from '../entities/Shipping';
 import type {ItemRepository} from '../repositories/ItemRepository';
 
 type Input = Array<{

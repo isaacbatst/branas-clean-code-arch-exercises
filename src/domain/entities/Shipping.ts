@@ -1,7 +1,7 @@
 
 // ## Considere
 
-import type {Dimensions} from '../domain/entities/Dimensions';
+import type {Dimensions} from './Dimensions';
 
 // - O valor mínimo é de R$10,00
 // - Por enquanto, como não temos uma forma de calcular a distância entre o CEP de origem e destino, será de 1000 km (fixo)
