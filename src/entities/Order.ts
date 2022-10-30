@@ -51,8 +51,4 @@ export default class Order {
 
 		return total;
 	}
-
-	getShipping() {
-		return this.shipping.getValue();
-	}
 }

@@ -91,19 +91,6 @@ test('Ao fazer um pedido, o mesmo item não pode ser informado mais de uma vez',
 	}).toThrowError('Item duplicado');
 });
 
-test('Ao fazer um pedido, deve calcular o frete', () => {
-	const order = new Order('317.153.361-86', new Date(), 0);
-	order.addItem(new Item(guitar), 1);
-	expect(order.getShipping()).toBe(30);
-});
-
-test('Ao fazer um pedido, com mais de um item deve calcular os fretes somados', () => {
-	const order = new Order('317.153.361-86', new Date(), 0);
-	order.addItem(new Item(guitar), 1);
-	order.addItem(new Item(amp), 1);
-	expect(order.getShipping()).toBe(40);
-});
-
 test('Ao fazer um pedido, deve incluir código', () => {
 	const order = new Order('317.153.361-86', new Date('2015-10-05'), 188);
 	expect(order.code).toBe('201500000189');
