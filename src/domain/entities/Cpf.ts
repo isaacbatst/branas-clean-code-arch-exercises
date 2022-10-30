@@ -1,7 +1,9 @@
+import {ValidationError} from '../errors/ValidationError';
+
 export default class Cpf {
 	constructor(readonly value: string) {
 		if (!this.validate(value)) {
-			throw new Error('Cpf inválido');
+			throw new ValidationError('INVALID_CPF');
 		}
 	}
 

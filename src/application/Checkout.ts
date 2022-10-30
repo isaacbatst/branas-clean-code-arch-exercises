@@ -1,6 +1,7 @@
 import type {ItemParams} from '../domain/entities/Item';
 import Item from '../domain/entities/Item';
 import Order from '../domain/entities/Order';
+import {NotFoundError} from '../domain/errors/NotFoundError';
 import type {CouponRepository} from '../domain/repositories/CouponRepository';
 import type {OrderRepository} from '../domain/repositories/OrderRepository';
 
@@ -33,7 +34,7 @@ export class Checkout {
 			const coupon = await this.couponRepository.getByCode(input.coupon);
 
 			if (!coupon) {
-				throw new Error('Cupom não encontrado');
+				throw new NotFoundError('COUPON_NOT_FOUND');
 			}
 
 			order.addCoupon(coupon);

@@ -12,7 +12,7 @@ test.each(validCpfs)('Deve validar o cpf', validCpf => {
 });
 
 test('Deve tentar validar o cpf com mais de 14 caracteres', () => {
-	expect(() => new Cpf('147.085.437-600')).toThrow(new Error('Cpf inválido'));
+	expect(() => new Cpf('147.085.437-600')).toThrow('INVALID_CPF');
 });
 
 const cpfsWithSameDigit = [
@@ -22,9 +22,9 @@ const cpfsWithSameDigit = [
 ];
 
 test.each(cpfsWithSameDigit)('Deve tentar validar um cpf com todos os dígitos iguais', cpf => {
-	expect(() => new Cpf(cpf)).toThrow(new Error('Cpf inválido'));
+	expect(() => new Cpf(cpf)).toThrow('INVALID_CPF');
 });
 
 test('Deve validar o cpf com letras', () => {
-	expect(() => new Cpf('abc')).toThrow(new Error('Cpf inválido'));
+	expect(() => new Cpf('abc')).toThrow('INVALID_CPF');
 });

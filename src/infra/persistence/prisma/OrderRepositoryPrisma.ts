@@ -8,17 +8,23 @@ export class OrderRepositoryPrisma implements OrderRepository {
 	}
 
 	async save(order: Order): Promise<void> {
+		let coupon;
+
+		if (order.getCoupon()) {
+			coupon = {
+				connect: {
+					code: order.getCoupon()?.code,
+				},
+			};
+		}
+
 		await prisma.order.create({
 			data: {
 				cpf: order.cpf.value,
 				date: order.date,
 				code: order.code,
 				total: order.getTotal(),
-				coupon: {
-					connect: {
-						code: order.getCoupon()?.code,
-					},
-				},
+				coupon,
 				orderItems: {
 					create: order.orderItems.map(item => ({
 						item: {

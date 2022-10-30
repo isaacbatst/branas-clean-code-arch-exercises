@@ -12,4 +12,5 @@ export type HttpMethod = 'get' | 'post' | 'put' | 'delete';
 
 export type HttpServer = {
 	on(method: HttpMethod, route: string, callback: (req: HttpRequest) => Promise<HttpResponse>): void;
+	listen(port: number): void;
 };
