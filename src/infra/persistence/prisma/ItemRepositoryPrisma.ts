@@ -13,7 +13,7 @@ export class ItemRepositoryPrisma implements ItemRepository {
 				height: item.height.toNumber(),
 				width: item.width.toNumber(),
 				price: item.price.toNumber(),
-				weight: item.price.toNumber(),
+				weight: item.weight.toNumber(),
 			});
 		}
 	}

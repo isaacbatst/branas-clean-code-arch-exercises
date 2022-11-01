@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pretest": "docker compose up -d",
     "test": "jest",
     "dev": "tsnd src/index.ts"
   },
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.5.0",
+    "axios": "^1.1.3",
     "express": "^4.18.2"
   }
 }

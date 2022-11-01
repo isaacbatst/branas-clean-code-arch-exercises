@@ -33,7 +33,7 @@ const cable = {
 };
 
 test('Não deve criar um pedido com CPF inválido', () => {
-	expect(() => new Order('111.111.111-11', new Date(), 0)).toThrow(new Error('Cpf inválido'));
+	expect(() => new Order('111.111.111-11', new Date(), 0)).toThrow('INVALID_CPF');
 });
 
 test('Deve criar um pedido sem itens', () => {
