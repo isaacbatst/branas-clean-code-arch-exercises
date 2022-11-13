@@ -1,7 +1,14 @@
 version: '3.1'
 
 services:
-
+  http: 
+    image: node:16
+    container_name: http_container
+    build: .
+    environment:
+      DATABASE_URL: postgresql://example:example@db:5432/mydb?schema=public
+    depends_on:
+      - "db"
   db:
     image: postgres
     ports:
