@@ -1,11 +1,11 @@
-import type {Request, RequestHandler} from 'express';
+import type {Request, RequestHandler, Express} from 'express';
 import express from 'express';
 import type {HttpMethod, HttpRequest, HttpResponse, HttpServer} from './HttpServer';
 
 export class HttpServerExpressAdapter implements HttpServer {
-	app = express();
+	public readonly app: Express;
 
-	appMethods: Record<HttpMethod, (path: string, callback: RequestHandler) => void> = {
+	private readonly appMethods: Record<HttpMethod, (path: string, callback: RequestHandler) => void> = {
 		post: (path: string, callback: RequestHandler) => {
 			this.app.post(path, callback);
 		},
@@ -21,6 +21,7 @@ export class HttpServerExpressAdapter implements HttpServer {
 	};
 
 	constructor() {
+		this.app = express();
 		this.app.use(express.json());
 	}
 
