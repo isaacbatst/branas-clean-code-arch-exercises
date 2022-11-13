@@ -43,9 +43,40 @@ model Order {
   id         Int         @id @default(autoincrement())
   cpf        String
   code       String      @unique
-  coupon     Coupon?      @relation(fields: [couponCode], references: [code])
+  coupon     Coupon?     @relation(fields: [couponCode], references: [code])
   couponCode String?
   total      Decimal     @db.Decimal(10, 2)
   date       DateTime
   orderItems OrderItem[]
+}
+
+enum Regions {
+  NORTH
+  NORTHEAST
+  SOUTHEAST
+  SOUTH
+  MIDWEST
+}
+
+model State {
+  ufCode    Int     @id
+  uf        String  @unique
+  name      String
+  latitude  Decimal @db.Decimal(10, 5)
+  longitude Decimal @db.Decimal(10, 5)
+  region    Regions
+  City      City[]
+}
+
+model City {
+  ibgeCode    Int     @id
+  name        String
+  latitude    Decimal @db.Decimal(10, 5)
+  longitude   Decimal @db.Decimal(10, 5)
+  capital     Boolean
+  state       State   @relation(fields: [stateUfCode], references: [ufCode])
+  siafiId     Int     @unique
+  ddd         Int
+  timezone    String
+  stateUfCode Int
 }
