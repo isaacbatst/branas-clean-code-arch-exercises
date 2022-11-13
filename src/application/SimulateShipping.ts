@@ -1,4 +1,5 @@
 import ShippingCalculator from '../domain/entities/ShippingCalculator';
+import {NotFoundError} from '../domain/errors/NotFoundError';
 import type {ItemRepository} from '../domain/repositories/ItemRepository';
 
 type Input = Array<{
@@ -18,7 +19,7 @@ export class SimulateShipping {
 			const item = await this.itemRepository.getById(id);
 
 			if (!item) {
-				throw new Error('Item não encontrado.');
+				throw new NotFoundError('Item não encontrado.');
 			}
 
 			shipping += ShippingCalculator.calculate(item) * quantity;
