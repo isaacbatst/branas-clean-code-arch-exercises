@@ -6,14 +6,14 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
-    "test": "jest",
+    "test": "yarn test:unit && yarn test:integration",
     "test:unit": "jest tests/unit",
-    "test:integration": "yarn test:integration:api && yarn test:integration:usecases",
-    "test:integration:api": "jest tests/integration/api",
+    "test:integration": "yarn test:integration:usecases && yarn test:integration:api",
     "test:integration:usecases": "jest tests/integration/usecases",
-    "db:reset": "yarn prisma migrate reset --force",
+    "test:integration:api": "jest tests/integration/api",
     "pretest:integration:api": "yarn db:reset",
-    "posttest:integration:api": "yarn db:reset"
+    "posttest:integration:api": "yarn db:reset",
+    "db:reset": "yarn prisma migrate reset --force"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -42,6 +42,7 @@
   "dependencies": {
     "@prisma/client": "^4.5.0",
     "axios": "^1.1.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1"
   }
 }

@@ -1,4 +1,5 @@
 import {CouponValidator} from '../domain/entities/CouponValidator';
+import {NotFoundError} from '../domain/errors/NotFoundError';
 import type {CouponRepository} from '../domain/repositories/CouponRepository';
 
 export class ValidateCoupon {
@@ -10,11 +11,9 @@ export class ValidateCoupon {
 		const coupon = await this.couponRepository.getByCode(couponCode);
 
 		if (!coupon) {
-			throw new Error('Cupom não encontrado');
+			throw new NotFoundError('Cupom não encontrado');
 		}
 
-		CouponValidator.validate(coupon, new Date());
-
-		return true;
+		return CouponValidator.validate(coupon, new Date());
 	}
 }

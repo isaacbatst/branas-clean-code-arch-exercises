@@ -34,7 +34,9 @@ export default class Order {
 	}
 
 	addCoupon(coupon: Coupon) {
-		CouponValidator.validate(coupon, this.date);
+		if (!CouponValidator.validate(coupon, this.date)) {
+			throw new Error('Cupom expirado');
+		}
 
 		this.coupon = coupon;
 	}

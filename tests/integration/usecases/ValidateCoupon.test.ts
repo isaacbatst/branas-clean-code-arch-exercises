@@ -19,9 +19,8 @@ test('Deve retornar cupom expirado', async () => {
 	await couponRepository.save(new Coupon('VALE20', 20, yesterday));
 	const validateCoupon = new ValidateCoupon(couponRepository);
 
-	await expect(async () => {
-		await validateCoupon.execute('VALE20');
-	}).rejects.toThrow('Cupom expirado');
+	const isValid = await validateCoupon.execute('VALE20');
+	expect(isValid).toBe(false);
 });
 
 test('Deve retornar cupom não encontrado', async () => {

@@ -7,10 +7,22 @@ test('POST /validate/coupon com cupom válido', async () => {
 		.send({coupon: 'VALE20'});
 
 	expect(response.status).toBe(200);
+	expect(response.body.valid).toBe(true);
 });
 
-// Test('POST /validate/coupon com cupom expirado', async () => {
-// });
+test('POST /validate/coupon com cupom expirado', async () => {
+	const response = await request(httpServer.app)
+		.post('/validate/coupon')
+		.send({coupon: 'VALE40'});
 
-// test('POST /validate/coupon com cupom não existente', async () => {
-// });
+	expect(response.status).toBe(200);
+	expect(response.body.valid).toBe(false);
+});
+
+test('POST /validate/coupon com cupom não existente', async () => {
+	const response = await request(httpServer.app)
+		.post('/validate/coupon')
+		.send({coupon: 'VALE30'});
+
+	expect(response.status).toBe(404);
+});
