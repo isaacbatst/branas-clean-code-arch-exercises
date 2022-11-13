@@ -1,4 +1,9 @@
 import axios, {AxiosError} from 'axios';
+import prisma from '../../../src/infra/persistence/prisma/prisma';
+
+afterAll(async () => {
+	await prisma.order.deleteMany();
+});
 
 test('POST /checkout com um item', async () => {
 	const response = await axios.post('http://localhost:3000/checkout', {
