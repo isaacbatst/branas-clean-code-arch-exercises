@@ -1,9 +1,9 @@
-import {Checkout} from '../../src/application/Checkout';
-import Coupon from '../../src/domain/entities/Coupon';
-import Item from '../../src/domain/entities/Item';
-import {CouponRepositoryMemory} from '../../src/infra/persistence/memory/CouponRepositoryMemory';
-import {ItemRepositoryMemory} from '../../src/infra/persistence/memory/ItemRepositoryMemory';
-import {OrderRepositoryMemory} from '../../src/infra/persistence/memory/OrderRepositoryMemory';
+import {Checkout} from '../../../src/application/Checkout';
+import Coupon from '../../../src/domain/entities/Coupon';
+import Item from '../../../src/domain/entities/Item';
+import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
+import {ItemRepositoryMemory} from '../../../src/infra/persistence/memory/ItemRepositoryMemory';
+import {OrderRepositoryMemory} from '../../../src/infra/persistence/memory/OrderRepositoryMemory';
 
 const guitar = {
 	id: 1,
