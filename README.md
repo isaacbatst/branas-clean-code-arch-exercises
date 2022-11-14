@@ -14,8 +14,8 @@
 - [x] O código do pedido é formado por AAAAPPPPPPPP onde AAAA representa o ano e o PPPPPPPP representa um sequencial do pedido
 - [x] Criar uma API (tanto faz se é REST, GraphQL ou qualquer outro formato) para os casos de uso
 - [x] Criar testes de integração para a API e os casos de uso
-- [ ] Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira
-- [ ] Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/cccat7_freight
+- [X] Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira
+- [X] Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/cccat7_freight
 
 ## Importante
 Implemente os DTOs para cada um dos use cases
