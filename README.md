@@ -6,8 +6,8 @@
 - [x] Deve validar o cupom de desconto (caso de uso)
 - [X] Deve retornar um pedido com base no código (caso de uso)
 - [ ] Deve retornar a lista de pedidos (caso de uso)
-- [ ] Calcule a distância entre dois CEPs e utilize no algoritmo de cálculo do frete
-- [ ] Deve calcular frete (caso de uso)
+- [X] Calcule a distância entre dois CEPs e utilize no algoritmo de cálculo do frete
+- [X] Deve calcular frete (caso de uso)
 
 
 ## Considere
