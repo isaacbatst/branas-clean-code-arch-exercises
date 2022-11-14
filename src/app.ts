@@ -13,6 +13,8 @@ import {DistanceGatewayImpl} from './infra/gateway/DistanceGatewayImpl';
 import {CityRepositoryPrisma} from './infra/persistence/prisma/CityRepositoryPrisma';
 import {AddressGatewayImpl} from './infra/gateway/AddressGatewayImpl';
 import type {AddressGateway} from './application/gateway/AddressGateway';
+import {GetOrderByCodeController} from './infra/controller/GetOrderByCodeController';
+import {GetOrderByCode} from './application/queries/GetOrderByCode';
 
 export class App {
 	readonly httpServer = new HttpServerExpressAdapter();
@@ -26,13 +28,12 @@ export class App {
 		const checkout = new Checkout(orderRepository, couponRepository, itemRepository, distanceGateway);
 		const validateCoupon = new ValidateCoupon(couponRepository);
 		const simulateShipping = new SimulateShipping(itemRepository, distanceGateway);
+		const getOrderByCode = new GetOrderByCode();
 
-		const orderController = new CheckoutController(this.httpServer, checkout);
-		orderController.register();
-		const validateCouponController = new ValidateCouponController(this.httpServer, validateCoupon);
-		validateCouponController.register();
-		const simulateShippingController = new SimulateShippingController(this.httpServer, simulateShipping);
-		simulateShippingController.register();
+		CheckoutController.register('post', '/checkout', this.httpServer, checkout);
+		ValidateCouponController.register('post', '/validate/coupon', this.httpServer, validateCoupon);
+		SimulateShippingController.register('post', '/simulate/shipping', this.httpServer, simulateShipping);
+		GetOrderByCodeController.register('get', '/order/:code', this.httpServer, getOrderByCode);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 	}

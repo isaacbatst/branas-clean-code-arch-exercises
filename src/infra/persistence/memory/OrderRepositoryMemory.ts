@@ -11,4 +11,8 @@ export class OrderRepositoryMemory implements OrderRepository {
 	async save(order: Order): Promise<void> {
 		this.orders.push(order);
 	}
+
+	async getByCode(code: string): Promise<Order | undefined> {
+		return this.orders.find(order => order.code === code);
+	}
 }

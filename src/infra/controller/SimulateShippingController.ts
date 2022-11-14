@@ -1,15 +1,15 @@
 import type {SimulateShipping} from '../../application/usecases/SimulateShipping';
 import {ValidationError} from '../../domain/errors/ValidationError';
-import type {HttpServer} from '../http/HttpServer';
+import type {HttpMethod, HttpServer} from '../http/HttpServer';
 
 export class SimulateShippingController {
-	constructor(
-		private readonly httpServer: HttpServer,
-		private readonly simulateShipping: SimulateShipping,
-	) {}
-
-	register() {
-		this.httpServer.on('post', '/simulate/shipping', async req => {
+	public static	register(
+		method: HttpMethod,
+		path: string,
+		httpServer: HttpServer,
+		simulateShipping: SimulateShipping,
+	) {
+		httpServer.on(method, path, async req => {
 			const {orderItems, destination} = req.body;
 
 			if (!destination || typeof destination !== 'string') {
@@ -20,7 +20,7 @@ export class SimulateShippingController {
 				throw new ValidationError('INVALID_ORDER_ITEMS');
 			}
 
-			const shipping = await this.simulateShipping.execute({
+			const shipping = await simulateShipping.execute({
 				destination,
 				orderItems,
 			});

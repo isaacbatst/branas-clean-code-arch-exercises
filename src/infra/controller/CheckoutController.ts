@@ -1,18 +1,15 @@
 import type {Checkout} from '../../application/usecases/Checkout';
-import type {AppErrors} from '../../domain/errors/AppError';
-import {AppError} from '../../domain/errors/AppError';
 import {ValidationError} from '../../domain/errors/ValidationError';
-import type {HttpServer} from '../http/HttpServer';
+import type {HttpMethod, HttpServer} from '../http/HttpServer';
 
 export class CheckoutController {
-	constructor(
-		readonly server: HttpServer,
-		readonly checkout: Checkout,
+	public static register(
+		method: HttpMethod,
+		path: string,
+		server: HttpServer,
+		checkout: Checkout,
 	) {
-	}
-
-	public register() {
-		this.server.on('post', '/checkout', async req => {
+		server.on(method, path, async req => {
 			const {cpf, items, coupon, destination} = req.body;
 			if (typeof cpf !== 'string') {
 				throw new ValidationError('INVALID_CPF');
@@ -30,7 +27,7 @@ export class CheckoutController {
 				throw new ValidationError('INVALID_DESTINATION');
 			}
 
-			const {code, total} = await this.checkout.execute({
+			const {code, total} = await checkout.execute({
 				cpf,
 				items,
 				coupon,
