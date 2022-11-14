@@ -1,5 +1,5 @@
+import type {ItemRepository} from '../../../application/repositories/ItemRepository';
 import type Item from '../../../domain/entities/Item';
-import type {ItemRepository} from '../../../domain/repositories/ItemRepository';
 
 export class ItemRepositoryMemory implements ItemRepository {
 	private readonly items: Item[] = [];

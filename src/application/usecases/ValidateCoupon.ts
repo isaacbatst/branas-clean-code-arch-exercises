@@ -1,6 +1,6 @@
-import {CouponValidator} from '../domain/entities/CouponValidator';
-import {NotFoundError} from '../domain/errors/NotFoundError';
-import type {CouponRepository} from '../domain/repositories/CouponRepository';
+import {CouponValidator} from '../../domain/entities/CouponValidator';
+import {NotFoundError} from '../../domain/errors/NotFoundError';
+import type {CouponRepository} from '../repositories/CouponRepository';
 
 export class ValidateCoupon {
 	constructor(

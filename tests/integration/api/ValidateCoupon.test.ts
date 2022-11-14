@@ -1,9 +1,12 @@
 import request from 'supertest';
-import httpServer from '../../../src/app';
+import {App} from '../../../src/app';
+import {AddressGatewayFake} from '../../../src/infra/gateway/AddressGatewayFake';
 
 test('POST /validate/coupon com cupom válido', async () => {
-	const response = await request(httpServer.app)
-		.post('/validate/coupon')
+	const addressGateway = new AddressGatewayFake();
+
+	const app = new App(addressGateway);
+	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE20'});
 
 	expect(response.status).toBe(200);
@@ -11,8 +14,10 @@ test('POST /validate/coupon com cupom válido', async () => {
 });
 
 test('POST /validate/coupon com cupom expirado', async () => {
-	const response = await request(httpServer.app)
-		.post('/validate/coupon')
+	const addressGateway = new AddressGatewayFake();
+
+	const app = new App(addressGateway);
+	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE40'});
 
 	expect(response.status).toBe(200);
@@ -20,8 +25,10 @@ test('POST /validate/coupon com cupom expirado', async () => {
 });
 
 test('POST /validate/coupon com cupom não existente', async () => {
-	const response = await request(httpServer.app)
-		.post('/validate/coupon')
+	const addressGateway = new AddressGatewayFake();
+
+	const app = new App(addressGateway);
+	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE30'});
 
 	expect(response.status).toBe(404);

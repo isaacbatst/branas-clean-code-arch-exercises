@@ -1,5 +1,5 @@
+import type {CouponRepository} from '../../../application/repositories/CouponRepository';
 import type Coupon from '../../../domain/entities/Coupon';
-import type {CouponRepository} from '../../../domain/repositories/CouponRepository';
 
 export class CouponRepositoryMemory implements CouponRepository {
 	coupons: Coupon[] = [];

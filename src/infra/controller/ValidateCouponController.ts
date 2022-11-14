@@ -1,4 +1,4 @@
-import type {ValidateCoupon} from '../../application/ValidateCoupon';
+import type {ValidateCoupon} from '../../application/usecases/ValidateCoupon';
 import {AppError} from '../../domain/errors/AppError';
 import {ValidationError} from '../../domain/errors/ValidationError';
 import type {HttpServer} from '../http/HttpServer';

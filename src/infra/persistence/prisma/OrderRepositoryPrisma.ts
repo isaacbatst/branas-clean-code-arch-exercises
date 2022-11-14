@@ -1,6 +1,6 @@
+import type {OrderRepository} from '../../../application/repositories/OrderRepository';
 import type Order from '../../../domain/entities/Order';
 import prisma from './prisma';
-import type {OrderRepository} from '../../../domain/repositories/OrderRepository';
 
 export class OrderRepositoryPrisma implements OrderRepository {
 	async getCount(): Promise<number> {
@@ -25,6 +25,7 @@ export class OrderRepositoryPrisma implements OrderRepository {
 				code: order.code,
 				total: order.getTotal(),
 				coupon,
+				destination: order.destination,
 				orderItems: {
 					create: order.orderItems.map(item => ({
 						item: {

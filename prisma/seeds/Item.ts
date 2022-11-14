@@ -12,6 +12,7 @@ export const seedItems = async () => {
 				width: 30,
 				price: 1000,
 				weight: 3,
+				addressCep: '29296-982',
 			},
 			{
 				description: 'Amplificador',
@@ -20,6 +21,7 @@ export const seedItems = async () => {
 				width: 14,
 				price: 5000,
 				weight: 1,
+				addressCep: '59700-970',
 			},
 		],
 	});

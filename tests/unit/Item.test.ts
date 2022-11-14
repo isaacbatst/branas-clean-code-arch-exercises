@@ -13,6 +13,7 @@ test.each(negativeDimensions)('Não deve criar um item com dimensões negativas'
 			id: 1,
 			price: 10,
 			weight: 20,
+			addressCep: 'any-address',
 			...dimensions,
 		});
 	}).toThrowError('Dimensão negativa');
@@ -27,6 +28,7 @@ test('Não deve criar um item com peso negativo', () => {
 			depth: 10,
 			id: 1,
 			price: 10,
+			addressCep: 'any-address',
 			weight: -1,
 		});
 	}).toThrow('Peso negativo');

@@ -20,6 +20,7 @@ CREATE TABLE "Item" (
     "width" DECIMAL(65,30) NOT NULL,
     "depth" DECIMAL(65,30) NOT NULL,
     "weight" DECIMAL(65,30) NOT NULL,
+    "addressCep" TEXT NOT NULL,
 
     CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
 );
@@ -43,6 +44,7 @@ CREATE TABLE "Order" (
     "couponCode" TEXT,
     "total" DECIMAL(10,2) NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
+    "destination" TEXT NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );

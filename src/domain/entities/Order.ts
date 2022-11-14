@@ -11,26 +11,25 @@ export default class Order {
 	readonly orderItems: OrderItem[];
 	readonly code: string;
 	readonly date: Date;
+	readonly destination: string;
 	private coupon?: Coupon;
-	private shipping: number;
 
-	constructor(cpf: string, date: Date, ordersCount: number) {
+	constructor(cpf: string, date: Date, ordersCount: number, destination: string) {
 		this.cpf = new Cpf(cpf);
 		this.orderItems = [];
-		this.shipping = 0;
 		this.date = date;
+		this.destination = destination;
 		this.code = OrderCodeGenerator.generate(date, ordersCount);
 	}
 
-	addItem(item: Item, quantity: number) {
+	addItem(item: Item, quantity: number, shipping: number) {
 		const isSomeEqual = this.orderItems.some(orderItem => orderItem.idItem === item.idItem);
 
 		if (isSomeEqual) {
 			throw new Error('Item duplicado');
 		}
 
-		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
-		this.shipping += ShippingCalculator.calculate(item) * quantity;
+		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity, shipping));
 	}
 
 	addCoupon(coupon: Coupon) {
@@ -43,9 +42,10 @@ export default class Order {
 
 	getTotal() {
 		let total = this.orderItems
-			.reduce((total, orderItem) => total + orderItem.getTotal(), 0);
-
-		total += this.shipping;
+			.reduce((total, orderItem) => {
+				total += orderItem.getTotal();
+				return Number(total.toFixed(2));
+			}, 0);
 
 		if (this.coupon) {
 			total -= this.coupon.calculateDiscount(total);

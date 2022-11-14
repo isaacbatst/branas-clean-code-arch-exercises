@@ -8,6 +8,7 @@ export type ItemParams = {
 	height: number;
 	width: number;
 	depth: number;
+	addressCep: string;
 };
 
 export default class Item {
@@ -16,6 +17,7 @@ export default class Item {
 	readonly price: number;
 	readonly dimensions: Dimensions;
 	readonly weight: number;
+	readonly addressCep: string;
 
 	constructor(
 		params: ItemParams,
@@ -24,6 +26,7 @@ export default class Item {
 		this.description = params.description;
 		this.price = params.price;
 		this.weight = params.weight;
+		this.addressCep = params.addressCep;
 		this.dimensions = new Dimensions(params.height, params.width, params.depth);
 
 		if (params.weight < 0) {

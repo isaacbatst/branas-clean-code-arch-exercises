@@ -1,4 +1,4 @@
-import type {SimulateShipping} from '../../application/SimulateShipping';
+import type {SimulateShipping} from '../../application/usecases/SimulateShipping';
 import {ValidationError} from '../../domain/errors/ValidationError';
 import type {HttpServer} from '../http/HttpServer';
 
@@ -10,13 +10,20 @@ export class SimulateShippingController {
 
 	register() {
 		this.httpServer.on('post', '/simulate/shipping', async req => {
-			const orderItems = req.body;
+			const {orderItems, destination} = req.body;
+
+			if (!destination || typeof destination !== 'string') {
+				throw new ValidationError('INVALID_DESTINATION');
+			}
 
 			if (!Array.isArray(orderItems)) {
 				throw new ValidationError('INVALID_ORDER_ITEMS');
 			}
 
-			const shipping = await this.simulateShipping.execute(orderItems);
+			const shipping = await this.simulateShipping.execute({
+				destination,
+				orderItems,
+			});
 
 			return {
 				statusCode: 200,
