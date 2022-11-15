@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Coupon {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  orders     Order[]
+  percentage Int
+  expireDate DateTime
+}
+
+model Item {
+  id          Int         @id @default(autoincrement())
+  description String
+  price       Decimal     @db.Decimal(10, 2)
+  height      Decimal
+  width       Decimal
+  depth       Decimal
+  weight      Decimal
+  orderItems  OrderItem[]
+  addressCep  String
+}
+
+model OrderItem {
+  id       Int     @id @default(autoincrement())
+  item     Item    @relation(fields: [itemId], references: [id])
+  itemId   Int
+  quantity Int
+  price    Decimal @db.Decimal(10, 2)
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId  Int
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  cpf         String
+  code        String      @unique
+  coupon      Coupon?     @relation(fields: [couponCode], references: [code])
+  couponCode  String?
+  total       Decimal     @db.Decimal(10, 2)
+  date        DateTime
+  destination String
+  orderItems  OrderItem[]
+}
+
+enum Regions {
+  NORTH
+  NORTHEAST
+  SOUTHEAST
+  SOUTH
+  MIDWEST
+}
+
+model State {
+  ufCode    Int     @id
+  uf        String  @unique
+  name      String
+  latitude  Decimal @db.Decimal(10, 5)
+  longitude Decimal @db.Decimal(10, 5)
+  region    Regions
+  city      City[]
+}
+
+model City {
+  ibgeCode    Int       @id
+  name        String
+  latitude    Decimal   @db.Decimal(10, 5)
+  longitude   Decimal   @db.Decimal(10, 5)
+  capital     Boolean
+  state       State     @relation(fields: [stateUfCode], references: [ufCode])
+  siafiId     Int       @unique
+  ddd         Int
+  timezone    String
+  stateUfCode Int
+}
