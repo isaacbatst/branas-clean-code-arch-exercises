@@ -9,9 +9,10 @@ export type HttpResponse = {
 };
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'delete';
+export type HttpRequestHandler = (req: HttpRequest) => Promise<HttpResponse>;
 
 export type HttpServer = {
-	on(method: HttpMethod, route: string, callback: (req: HttpRequest) => Promise<HttpResponse>): void;
+	on(method: HttpMethod, route: string, callback: HttpRequestHandler): void;
 	listen(port: number): void;
 	useErrorMiddleware(callback: (err: unknown) => HttpResponse): void;
 };

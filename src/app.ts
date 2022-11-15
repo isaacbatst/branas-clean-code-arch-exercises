@@ -33,11 +33,17 @@ export class App {
 		const getOrderByCode = new GetOrderByCode();
 		const getOrdersByCpf = new GetOrdersByCpf();
 
-		CheckoutController.register('post', '/checkout', this.httpServer, checkout);
-		ValidateCouponController.register('post', '/validate/coupon', this.httpServer, validateCoupon);
-		SimulateShippingController.register('post', '/simulate/shipping', this.httpServer, simulateShipping);
-		GetOrderByCodeController.register('get', '/order/:code', this.httpServer, getOrderByCode);
-		GetOrdersByCpfController.register('get', '/orders', this.httpServer, getOrdersByCpf);
+		const checkoutController = new CheckoutController(checkout);
+		const validateCouponController = new ValidateCouponController(validateCoupon);
+		const simulateShippingController = new SimulateShippingController(simulateShipping);
+		const getOrderByCodeController = new GetOrderByCodeController(getOrderByCode);
+		const getOrdersByCpfController = new GetOrdersByCpfController(getOrdersByCpf);
+
+		checkoutController.register('post', '/checkout', this.httpServer);
+		validateCouponController.register('post', '/validate/coupon', this.httpServer);
+		simulateShippingController.register('post', '/simulate/shipping', this.httpServer);
+		getOrderByCodeController.register('get', '/order/:code', this.httpServer);
+		getOrdersByCpfController.register('get', '/orders', this.httpServer);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 	}
