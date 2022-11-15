@@ -15,6 +15,8 @@ import {AddressGatewayImpl} from './infra/gateway/AddressGatewayImpl';
 import type {AddressGateway} from './application/gateway/AddressGateway';
 import {GetOrderByCodeController} from './infra/controller/GetOrderByCodeController';
 import {GetOrderByCode} from './application/queries/GetOrderByCode';
+import {GetOrdersByCpfController} from './infra/controller/GetOrdersByCpfController';
+import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
 
 export class App {
 	readonly httpServer = new HttpServerExpressAdapter();
@@ -29,11 +31,13 @@ export class App {
 		const validateCoupon = new ValidateCoupon(couponRepository);
 		const simulateShipping = new SimulateShipping(itemRepository, distanceGateway);
 		const getOrderByCode = new GetOrderByCode();
+		const getOrdersByCpf = new GetOrdersByCpf();
 
 		CheckoutController.register('post', '/checkout', this.httpServer, checkout);
 		ValidateCouponController.register('post', '/validate/coupon', this.httpServer, validateCoupon);
 		SimulateShippingController.register('post', '/simulate/shipping', this.httpServer, simulateShipping);
 		GetOrderByCodeController.register('get', '/order/:code', this.httpServer, getOrderByCode);
+		GetOrdersByCpfController.register('get', '/orders', this.httpServer, getOrdersByCpf);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 	}
