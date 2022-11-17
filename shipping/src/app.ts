@@ -1,5 +1,7 @@
 import type {AddressGateway} from './application/gateway/AddressGateway';
+import {CalculateEachShipping} from './application/usecases/CalculateEachShipping';
 import {CalculateShipping} from './application/usecases/CalculateShipping';
+import {CalculateEachShippingController} from './infra/controller/CalculateEachShippingController';
 import {CalculateShippingController} from './infra/controller/CalculateShippingController';
 import {HttpServerExpressAdapter} from './infra/http/HttpServerExpressAdapter';
 import {ErrorMiddleware} from './infra/middleware/ErrorMiddleware';
@@ -11,10 +13,13 @@ export class App {
 	constructor(addressGateway: AddressGateway) {
 		const cityRepository = new CityRepositoryPrisma();
 		const calculateShipping = new CalculateShipping(addressGateway, cityRepository);
+		const calculateEachShipping = new CalculateEachShipping(addressGateway, cityRepository);
 
 		const calculateShippingController = new CalculateShippingController(calculateShipping);
+		const calculateEachShippingController = new CalculateEachShippingController(calculateEachShipping);
 
 		calculateShippingController.register('post', '/calculate/shipping', this.httpServer);
+		calculateEachShippingController.register('post', '/calculate/each-shipping', this.httpServer);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 	}
