@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import {App} from './app';
-import {AddressGatewayImpl} from './infra/gateway/AddressGatewayImpl';
+import {ShippingGatewayImpl} from './infra/gateway/ShippingGatewayImpl';
 
-const addressGateway = new AddressGatewayImpl();
-const app = new App(addressGateway);
+const shippingGateway = new ShippingGatewayImpl();
+const app = new App(shippingGateway);
 
 app.httpServer.listen(3000);
 

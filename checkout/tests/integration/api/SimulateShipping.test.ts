@@ -1,11 +1,10 @@
 import request from 'supertest';
 import {App} from '../../../src/app';
-import {AddressGatewayFake} from '../../../src/infra/gateway/AddressGatewayFake';
+import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 
 test('Ao simular o frete deve retornar valor', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/simulate/shipping')
 		.send({
 			orderItems: [
@@ -16,13 +15,12 @@ test('Ao simular o frete deve retornar valor', async () => {
 		});
 
 	expect(response.status).toBe(200);
-	expect(response.body.shipping).toBe(43.08);
+	expect(response.body.shipping).toBe(20);
 });
 
 test('Ao simular frete com produto não existente deve lançar erro', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/simulate/shipping')
 		.send({
 			orderItems: [

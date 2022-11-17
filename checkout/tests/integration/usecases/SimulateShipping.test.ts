@@ -1,7 +1,7 @@
-import Item from '../../../src/domain/entities/Item';
-import {ItemRepositoryMemory} from '../../../src/infra/persistence/memory/ItemRepositoryMemory';
 import {SimulateShipping} from '../../../src/application/usecases/SimulateShipping';
-import {DistanceGatewayFake} from '../../../src/infra/gateway/DistanceGatewayFake';
+import Item from '../../../src/domain/entities/Item';
+import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
+import {ItemRepositoryMemory} from '../../../src/infra/persistence/memory/ItemRepositoryMemory';
 
 const guitar = {
 	id: 1,
@@ -26,11 +26,11 @@ const amp = {
 };
 
 test('Ao simular o frete deve retornar valor', async () => {
-	const distanceGateway = new DistanceGatewayFake();
+	const shippingGateway = new ShippingGatewayFake();
 	const itemRepository = new ItemRepositoryMemory();
 	await itemRepository.addItem(new Item(guitar));
 	await itemRepository.addItem(new Item(amp));
-	const simulateShipping = new SimulateShipping(itemRepository, distanceGateway);
+	const simulateShipping = new SimulateShipping(itemRepository, shippingGateway);
 	const shippingPrice = await simulateShipping.execute({
 		orderItems: [
 			{id: 1, quantity: 1},
@@ -39,14 +39,14 @@ test('Ao simular o frete deve retornar valor', async () => {
 		destination: 'any-destination',
 	});
 
-	expect(shippingPrice).toBe(40);
+	expect(shippingPrice).toBe(20);
 });
 
 test('Ao simular frete com produto não existente deve lançar erro', async () => {
-	const distanceGateway = new DistanceGatewayFake();
+	const shippingGateway = new ShippingGatewayFake();
 	const itemRepository = new ItemRepositoryMemory();
 	await itemRepository.addItem(new Item(guitar));
-	const simulateShipping = new SimulateShipping(itemRepository, distanceGateway);
+	const simulateShipping = new SimulateShipping(itemRepository, shippingGateway);
 
 	await expect(async () => {
 		await simulateShipping.execute({

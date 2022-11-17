@@ -5,6 +5,7 @@ export class ErrorMiddleware {
 	static errorToStatusCode: Record<AppErrors, number> = {
 		notFoundError: 404,
 		validationError: 400,
+		gatewayError: 502,
 	};
 
 	static handle(error: unknown) {

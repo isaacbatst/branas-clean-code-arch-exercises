@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {App} from '../../../src/app';
-import {AddressGatewayFake} from '../../../src/infra/gateway/AddressGatewayFake';
+import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 import prisma from '../../../src/infra/persistence/prisma/prisma';
 
 afterAll(async () => {
@@ -8,9 +8,8 @@ afterAll(async () => {
 });
 
 test('POST /checkout com um item', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app)
 		.post('/checkout')
 		.send({
@@ -25,13 +24,12 @@ test('POST /checkout com um item', async () => {
 		});
 
 	expect(response.status).toBe(200);
-	expect(response.body.total).toBe(1027.3);
+	expect(response.body.total).toBe(1010);
 });
 
 test('POST /checkout com dois itens', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/checkout')
 		.send({
 			cpf: '317.153.361-86',
@@ -49,13 +47,13 @@ test('POST /checkout com dois itens', async () => {
 		});
 
 	expect(response.status).toBe(200);
-	expect(response.body.total).toBe(7070.38);
+	expect(response.body.total).toBe(7030);
 });
 
 test('POST /checkout com cupom de desconto', async () => {
-	const addressGateway = new AddressGatewayFake();
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 
-	const app = new App(addressGateway);
 	const response = await request(app.httpServer.app).post('/checkout')
 		.send({
 			cpf: '317.153.361-86',
@@ -74,13 +72,12 @@ test('POST /checkout com cupom de desconto', async () => {
 		});
 
 	expect(response.status).toBe(200);
-	expect(response.body.total).toBe(4834.464);
+	expect(response.body.total).toBe(4816);
 });
 
 test('POST /checkout com cupom inexistente', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/checkout')
 		.send({
 			cpf: '317.153.361-86',

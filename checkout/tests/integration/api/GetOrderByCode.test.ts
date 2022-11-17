@@ -1,11 +1,10 @@
 import {App} from '../../../src/app';
-import {AddressGatewayFake} from '../../../src/infra/gateway/AddressGatewayFake';
 import request from 'supertest';
+import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 
 test('GET /order/:code com pedido existente', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).get('/order/202200000001');
 
 	expect(response.status).toBe(200);
@@ -14,9 +13,9 @@ test('GET /order/:code com pedido existente', async () => {
 });
 
 test('GET /order/:code com pedido inexistente', async () => {
-	const addressGateway = new AddressGatewayFake();
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 
-	const app = new App(addressGateway);
 	const response = await request(app.httpServer.app).get('/order/200000010000');
 
 	expect(response.status).toBe(404);

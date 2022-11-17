@@ -1,7 +1,7 @@
 import {Checkout} from '../../../src/application/usecases/Checkout';
 import Coupon from '../../../src/domain/entities/Coupon';
 import Item from '../../../src/domain/entities/Item';
-import {DistanceGatewayFake} from '../../../src/infra/gateway/DistanceGatewayFake';
+import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
 import {ItemRepositoryMemory} from '../../../src/infra/persistence/memory/ItemRepositoryMemory';
 import {OrderRepositoryMemory} from '../../../src/infra/persistence/memory/OrderRepositoryMemory';
@@ -29,13 +29,13 @@ const amp = {
 };
 
 const makeSut = async () => {
-	const distanceGateway = new DistanceGatewayFake();
 	const orderRepository = new OrderRepositoryMemory();
 	const couponRepository = new CouponRepositoryMemory();
 	const itemRepository = new ItemRepositoryMemory();
+	const shippingGateway = new ShippingGatewayFake();
 	await itemRepository.addItem(new Item(guitar));
 	await itemRepository.addItem(new Item(amp));
-	const checkout = new Checkout(orderRepository, couponRepository, itemRepository, distanceGateway);
+	const checkout = new Checkout(orderRepository, couponRepository, itemRepository, shippingGateway);
 
 	return {
 		orderRepository,
@@ -65,7 +65,7 @@ test('Ao criar o pedido com um item deve calcular o total', async () => {
 		destination: 'any-destination',
 	});
 
-	expect(created.total).toBe(1030);
+	expect(created.total).toBe(1010);
 });
 
 test('Ao criar o pedido com dois itens deve calcular o total', async () => {
@@ -80,7 +80,7 @@ test('Ao criar o pedido com dois itens deve calcular o total', async () => {
 		destination: 'any-destination',
 	});
 
-	expect(created.total).toBe(7070);
+	expect(created.total).toBe(7030);
 });
 
 test('Ao criar o pedido com cupom de desconto deve calcular o total', async () => {
@@ -99,7 +99,7 @@ test('Ao criar o pedido com cupom de desconto deve calcular o total', async () =
 		destination: 'any-destination',
 	});
 
-	expect(created.total).toBe(4832);
+	expect(created.total).toBe(4816);
 });
 
 test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {

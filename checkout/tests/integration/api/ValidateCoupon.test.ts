@@ -1,11 +1,10 @@
 import request from 'supertest';
 import {App} from '../../../src/app';
-import {AddressGatewayFake} from '../../../src/infra/gateway/AddressGatewayFake';
+import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 
 test('POST /validate/coupon com cupom válido', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE20'});
 
@@ -14,9 +13,8 @@ test('POST /validate/coupon com cupom válido', async () => {
 });
 
 test('POST /validate/coupon com cupom expirado', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE40'});
 
@@ -25,9 +23,8 @@ test('POST /validate/coupon com cupom expirado', async () => {
 });
 
 test('POST /validate/coupon com cupom não existente', async () => {
-	const addressGateway = new AddressGatewayFake();
-
-	const app = new App(addressGateway);
+	const shippingGatewayFake = new ShippingGatewayFake();
+	const app = new App(shippingGatewayFake);
 	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE30'});
 

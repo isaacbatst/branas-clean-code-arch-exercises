@@ -1,7 +1,9 @@
 export class Dimensions {
-	constructor(readonly height: number,
+	constructor(
+		readonly height: number,
 		readonly width: number,
-		readonly depth: number) {
+		readonly depth: number,
+	) {
 		if (this.isSomeDimensionNegative()) {
 			throw new Error('Dimensão negativa');
 		}

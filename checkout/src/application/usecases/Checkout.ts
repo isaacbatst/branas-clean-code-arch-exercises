@@ -1,7 +1,7 @@
 import Order from '../../domain/entities/Order';
-import ShippingCalculator from '../../domain/entities/ShippingCalculator';
+import {GatewayError} from '../../domain/errors/GatewayError';
 import {NotFoundError} from '../../domain/errors/NotFoundError';
-import type {DistanceGateway} from '../gateway/DistanceGateway';
+import type {ShippingGateway} from '../gateway/ShippingGateway';
 import type {CouponRepository} from '../repositories/CouponRepository';
 import type {ItemRepository} from '../repositories/ItemRepository';
 import type {OrderRepository} from '../repositories/OrderRepository';
@@ -23,23 +23,39 @@ export class Checkout {
 		private readonly orderRepository: OrderRepository,
 		private readonly couponRepository: CouponRepository,
 		private readonly itemRepository: ItemRepository,
-		private readonly distanceGateway: DistanceGateway,
+		private readonly shippingGateway: ShippingGateway,
 	) {}
 
 	async execute(input: Input): Promise<Output> {
 		const count = await this.orderRepository.getCount();
 		const order = new Order(input.cpf, new Date(), count, input.destination);
-		await Promise.all(input.items.map(async ({id, quantity}) => {
+
+		const items = await Promise.all(input.items.map(async ({id, quantity}) => {
 			const item = await this.itemRepository.getById(id);
 			if (!item) {
 				throw new NotFoundError('ITEM_NOT_FOUND');
 			}
 
-			const distance = await this.distanceGateway.getDistanceByCep(item.addressCep, order.destination);
-			const itemShipping = ShippingCalculator.calculate(item, distance);
-
-			order.addItem(item, quantity, itemShipping);
+			return {
+				item,
+				quantity,
+			};
 		}));
+
+		const shippings = await this.shippingGateway.calculateShipping({
+			destination: input.destination,
+			orderItems: items,
+		});
+
+		items.forEach(({item, quantity}) => {
+			const shippingItem = shippings.find(shippingItem => shippingItem.id === item.idItem);
+
+			if (!shippingItem) {
+				throw new GatewayError('Frete de item não calculado');
+			}
+
+			order.addItem(item, quantity, shippingItem.shipping);
+		});
 
 		if (input.coupon) {
 			const coupon = await this.couponRepository.getByCode(input.coupon);
@@ -51,6 +67,7 @@ export class Checkout {
 		}
 
 		await this.orderRepository.save(order);
+
 		return {
 			code: order.code,
 			total: order.getTotal(),
