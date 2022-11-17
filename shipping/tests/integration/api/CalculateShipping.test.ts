@@ -11,6 +11,7 @@ test('Ao calcular o frete deve retornar valor', async () => {
 			destination: '59700-970',
 			orderItems: [
 				{
+					id: 1,
 					dimensions: {
 						depth: 10,
 						height: 100,
@@ -21,6 +22,7 @@ test('Ao calcular o frete deve retornar valor', async () => {
 					quantity: 2,
 				},
 				{
+					id: 2,
 					dimensions: {
 						depth: 8,
 						height: 15,
@@ -34,5 +36,6 @@ test('Ao calcular o frete deve retornar valor', async () => {
 		});
 
 	expect(response.status).toBe(200);
-	expect(response.body.shipping).toBe(111.73);
+	expect(response.body.shipping).toContainEqual({id: 1, shipping: 94.68});
+	expect(response.body.shipping).toContainEqual({id: 2, shipping: 17.05});
 });

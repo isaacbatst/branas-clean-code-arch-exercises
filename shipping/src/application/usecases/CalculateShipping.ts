@@ -8,6 +8,7 @@ import type {CityRepository} from '../repositories/CityRepository';
 type Input = {
 	destination: string;
 	orderItems: Array<{
+		id: number;
 		dimensions: {
 			depth: number;
 			height: number;
@@ -25,18 +26,21 @@ export class CalculateShipping {
 		private readonly cityRepository: CityRepository,
 	) {}
 
-	async execute(input: Input): Promise<number> {
+	async execute(input: Input): Promise<Array<{id: number; shipping: number}>> {
 		const destinationCoordinantes = await this.getCoordinatesByCep(input.destination);
 
-		let shipping = 0;
-
-		await Promise.all(input.orderItems.map(async orderItem => {
+		const shippings = await Promise.all(input.orderItems.map(async orderItem => {
 			const originCoordinates = await this.getCoordinatesByCep(orderItem.origin);
 			const distance = DistanceCalculator.calculate(originCoordinates, destinationCoordinantes);
-			shipping += ShippingCalculator.calculate(orderItem, distance) * orderItem.quantity;
+			const itemShipping = ShippingCalculator.calculate(orderItem, distance) * orderItem.quantity;
+
+			return {
+				id: orderItem.id,
+				shipping: itemShipping,
+			};
 		}));
 
-		return shipping;
+		return shippings;
 	}
 
 	private async getCoordinatesByCep(cep: string): Promise<Coordinates> {
