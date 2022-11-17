@@ -1,15 +1,14 @@
 version: '3.1'
 
 services:
-  http: 
+  checkout_http: 
     image: node:16
-    container_name: http_container
     build: .
     environment:
       DATABASE_URL: postgresql://example:example@db:5432/mydb?schema=public
     depends_on:
-      - "db"
-  db:
+      - "checkout_db"
+  checkout_db:
     image: postgres
     ports:
       - 5432:5432

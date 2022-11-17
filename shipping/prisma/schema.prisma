@@ -10,48 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Coupon {
-  id         Int      @id @default(autoincrement())
-  code       String   @unique
-  orders     Order[]
-  percentage Int
-  expireDate DateTime
-}
-
-model Item {
-  id          Int         @id @default(autoincrement())
-  description String
-  price       Decimal     @db.Decimal(10, 2)
-  height      Decimal
-  width       Decimal
-  depth       Decimal
-  weight      Decimal
-  orderItems  OrderItem[]
-  addressCep  String
-}
-
-model OrderItem {
-  id       Int     @id @default(autoincrement())
-  item     Item    @relation(fields: [itemId], references: [id])
-  itemId   Int
-  quantity Int
-  price    Decimal @db.Decimal(10, 2)
-  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId  Int
-}
-
-model Order {
-  id          Int         @id @default(autoincrement())
-  cpf         String
-  code        String      @unique
-  coupon      Coupon?     @relation(fields: [couponCode], references: [code])
-  couponCode  String?
-  total       Decimal     @db.Decimal(10, 2)
-  date        DateTime
-  destination String
-  orderItems  OrderItem[]
-}
-
 enum Regions {
   NORTH
   NORTHEAST
