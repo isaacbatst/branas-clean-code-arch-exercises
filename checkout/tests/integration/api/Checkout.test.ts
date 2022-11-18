@@ -1,7 +1,6 @@
 import request from 'supertest';
 import {App} from '../../../src/app';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
-import prisma from '../../../src/infra/persistence/prisma/prisma';
 
 test('POST /checkout com um item', async () => {
 	const shippingGatewayFake = new ShippingGatewayFake();
