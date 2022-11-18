@@ -5,5 +5,5 @@ import {ShippingGatewayImpl} from './infra/gateway/ShippingGatewayImpl';
 const shippingGateway = new ShippingGatewayImpl();
 const app = new App(shippingGateway);
 
-app.httpServer.listen(3000);
+app.httpServer.listen(Number(process.env.API_PORT));
 
