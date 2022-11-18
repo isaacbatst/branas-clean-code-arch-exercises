@@ -3,10 +3,6 @@ import {App} from '../../../src/app';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 import prisma from '../../../src/infra/persistence/prisma/prisma';
 
-afterAll(async () => {
-	await prisma.order.deleteMany();
-});
-
 test('POST /checkout com um item', async () => {
 	const shippingGatewayFake = new ShippingGatewayFake();
 	const app = new App(shippingGatewayFake);
