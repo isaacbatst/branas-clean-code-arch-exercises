@@ -1,12 +1,10 @@
 import type {ShippingGateway} from './application/gateway/ShippingGateway';
-import {GetItem} from './application/queries/GetItem';
 import {GetOrderByCode} from './application/queries/GetOrderByCode';
 import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
 import {Checkout} from './application/usecases/Checkout';
 import {SimulateShipping} from './application/usecases/SimulateShipping';
 import {ValidateCoupon} from './application/usecases/ValidateCoupon';
 import {CheckoutController} from './infra/controller/CheckoutController';
-import {GetItemController} from './infra/controller/GetItemController';
 import {GetOrderByCodeController} from './infra/controller/GetOrderByCodeController';
 import {GetOrdersByCpfController} from './infra/controller/GetOrdersByCpfController';
 import {SimulateShippingController} from './infra/controller/SimulateShippingController';
@@ -31,21 +29,18 @@ export class App {
 		const simulateShipping = new SimulateShipping(itemRepository, shippingGateway);
 		const getOrderByCode = new GetOrderByCode();
 		const getOrdersByCpf = new GetOrdersByCpf();
-		const getItem = new GetItem();
 
 		const checkoutController = new CheckoutController(checkout);
 		const validateCouponController = new ValidateCouponController(validateCoupon);
 		const simulateShippingController = new SimulateShippingController(simulateShipping);
 		const getOrderByCodeController = new GetOrderByCodeController(getOrderByCode);
 		const getOrdersByCpfController = new GetOrdersByCpfController(getOrdersByCpf);
-		const getItemController = new GetItemController(getItem);
 
 		checkoutController.register('post', '/checkout', this.httpServer);
 		validateCouponController.register('post', '/validate/coupon', this.httpServer);
 		simulateShippingController.register('post', '/simulate/shipping', this.httpServer);
 		getOrderByCodeController.register('get', '/order/:code', this.httpServer);
 		getOrdersByCpfController.register('get', '/orders', this.httpServer);
-		getItemController.register('get', '/item/:id', this.httpServer);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 	}

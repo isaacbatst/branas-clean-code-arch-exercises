@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  catalog_http: 
+    image: node:16
+    build: .
+    environment:
+      DATABASE_URL: postgresql://example:example@db:5432/mydb?schema=public
+    depends_on:
+      - "catalog_db"
+  catalog_db:
+    image: postgres
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: example
