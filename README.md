@@ -8,6 +8,9 @@
 - [X] Deve retornar a lista de pedidos (caso de uso)
 - [X] Calcule a distância entre dois CEPs e utilize no algoritmo de cálculo do frete
 - [X] Deve calcular frete (caso de uso)
+- [] Deve reduzir o estoque ao realizar o pedido de um item
+- [] Deve aumentar o estoque ao cancelar um pedido
+- [] Coloque o estoque em um bounded context
 
 
 ## Considere
@@ -17,6 +20,7 @@
 - [X] Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira
 - [X] Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/cccat7_freight
 - [X] Separar os bounded contexts em microserviços diferentes
+
 
 ## Importante
 Implemente os DTOs para cada um dos use cases
