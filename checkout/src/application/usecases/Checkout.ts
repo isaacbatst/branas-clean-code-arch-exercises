@@ -1,9 +1,10 @@
 import Order from '../../domain/entities/Order';
 import {GatewayError} from '../../domain/errors/GatewayError';
 import {NotFoundError} from '../../domain/errors/NotFoundError';
+import type {ItemGateway} from '../gateway/ItemGateway';
 import type {ShippingGateway} from '../gateway/ShippingGateway';
 import type {CouponRepository} from '../repositories/CouponRepository';
-import type {ItemRepository} from '../repositories/ItemRepository';
+import type {OrderProjectionRepository} from '../repositories/OrderProjectionRepository';
 import type {OrderRepository} from '../repositories/OrderRepository';
 
 type Input = {
@@ -21,8 +22,9 @@ type Output = {
 export class Checkout {
 	constructor(
 		private readonly orderRepository: OrderRepository,
+		private readonly orderProjectionRepository: OrderProjectionRepository,
 		private readonly couponRepository: CouponRepository,
-		private readonly itemRepository: ItemRepository,
+		private readonly itemGateway: ItemGateway,
 		private readonly shippingGateway: ShippingGateway,
 	) {}
 
@@ -31,10 +33,7 @@ export class Checkout {
 		const order = new Order(input.cpf, new Date(), count, input.destination);
 
 		const items = await Promise.all(input.items.map(async ({id, quantity}) => {
-			const item = await this.itemRepository.getById(id);
-			if (!item) {
-				throw new NotFoundError('ITEM_NOT_FOUND');
-			}
+			const item = await this.itemGateway.getById(id);
 
 			return {
 				item,
@@ -59,14 +58,12 @@ export class Checkout {
 
 		if (input.coupon) {
 			const coupon = await this.couponRepository.getByCode(input.coupon);
-			if (!coupon) {
-				throw new NotFoundError('COUPON_NOT_FOUND');
-			}
 
 			order.addCoupon(coupon);
 		}
 
 		await this.orderRepository.save(order);
+		await this.orderProjectionRepository.save(order, items.map(({item}) => item));
 
 		return {
 			code: order.code,

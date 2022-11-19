@@ -9,20 +9,6 @@ CREATE TABLE "Coupon" (
 );
 
 -- CreateTable
-CREATE TABLE "Item" (
-    "id" SERIAL NOT NULL,
-    "description" TEXT NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
-    "height" DECIMAL(65,30) NOT NULL,
-    "width" DECIMAL(65,30) NOT NULL,
-    "depth" DECIMAL(65,30) NOT NULL,
-    "weight" DECIMAL(65,30) NOT NULL,
-    "addressCep" TEXT NOT NULL,
-
-    CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "OrderItem" (
     "id" SERIAL NOT NULL,
     "itemId" INTEGER NOT NULL,
@@ -46,14 +32,28 @@ CREATE TABLE "Order" (
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "OrderProjection" (
+    "id" SERIAL NOT NULL,
+    "cpf" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "couponCode" TEXT,
+    "total" DECIMAL(10,2) NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "destination" TEXT NOT NULL,
+    "orderItems" JSONB NOT NULL,
+
+    CONSTRAINT "OrderProjection_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Coupon_code_key" ON "Coupon"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Order_code_key" ON "Order"("code");
 
--- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "OrderProjection_code_key" ON "OrderProjection"("code");
 
 -- AddForeignKey
 ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;

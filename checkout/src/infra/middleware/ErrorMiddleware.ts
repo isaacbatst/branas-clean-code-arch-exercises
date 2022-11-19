@@ -18,7 +18,7 @@ export class ErrorMiddleware {
 			};
 		}
 
-		console.log(error);
+		console.log('middleware', error, error instanceof AppError);
 
 		return {
 			statusCode: 500,

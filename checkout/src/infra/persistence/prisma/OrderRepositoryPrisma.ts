@@ -28,11 +28,7 @@ export class OrderRepositoryPrisma implements OrderRepository {
 				destination: order.destination,
 				orderItems: {
 					create: order.orderItems.map(item => ({
-						item: {
-							connect: {
-								id: item.idItem,
-							},
-						},
+						itemId: item.idItem,
 						price: item.price,
 						quantity: item.quantity,
 					})),

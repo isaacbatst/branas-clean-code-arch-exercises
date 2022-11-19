@@ -1,3 +1,4 @@
+import type {ItemGateway} from './application/gateway/ItemGateway';
 import type {ShippingGateway} from './application/gateway/ShippingGateway';
 import {GetOrderByCode} from './application/queries/GetOrderByCode';
 import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
@@ -12,7 +13,7 @@ import {ValidateCouponController} from './infra/controller/ValidateCouponControl
 import {HttpServerExpressAdapter} from './infra/http/HttpServerExpressAdapter';
 import {ErrorMiddleware} from './infra/middleware/ErrorMiddleware';
 import {CouponRepositoryPrisma} from './infra/persistence/prisma/CouponRepositoryPrisma';
-import {ItemRepositoryPrisma} from './infra/persistence/prisma/ItemRepositoryPrisma';
+import {OrderProjectionRepositoryPrisma} from './infra/persistence/prisma/OrderProjectionRepositoryPrisma';
 import {OrderRepositoryPrisma} from './infra/persistence/prisma/OrderRepositoryPrisma';
 
 export class App {
@@ -20,13 +21,14 @@ export class App {
 
 	constructor(
 		shippingGateway: ShippingGateway,
+		itemGateway: ItemGateway,
 	) {
 		const couponRepository = new CouponRepositoryPrisma();
 		const orderRepository = new OrderRepositoryPrisma();
-		const itemRepository = new ItemRepositoryPrisma();
-		const checkout = new Checkout(orderRepository, couponRepository, itemRepository, shippingGateway);
+		const orderProjectionRepository = new OrderProjectionRepositoryPrisma();
+		const checkout = new Checkout(orderRepository, orderProjectionRepository, couponRepository, itemGateway, shippingGateway);
 		const validateCoupon = new ValidateCoupon(couponRepository);
-		const simulateShipping = new SimulateShipping(itemRepository, shippingGateway);
+		const simulateShipping = new SimulateShipping(itemGateway, shippingGateway);
 		const getOrderByCode = new GetOrderByCode();
 		const getOrdersByCpf = new GetOrdersByCpf();
 

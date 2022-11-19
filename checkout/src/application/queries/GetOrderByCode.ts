@@ -16,16 +16,9 @@ type Output = {
 
 export class GetOrderByCode {
 	async query(code: string): Promise<Output> {
-		const order = await prisma.order.findUnique({
+		const order = await prisma.orderProjection.findUnique({
 			where: {
 				code,
-			},
-			include: {
-				orderItems: {
-					include: {
-						item: true,
-					},
-				},
 			},
 		});
 
@@ -33,15 +26,17 @@ export class GetOrderByCode {
 			throw new NotFoundError('ORDER_NOT_FOUND');
 		}
 
+		const orderItems = order.orderItems as Array<{description: string; itemId: number; price: number; quantity: number}>;
+
 		return {
 			date: order.date,
 			destination: order.destination,
 			total: order.total.toNumber(),
 			code: order.code,
-			orderItems: order.orderItems.map(orderItem => ({
-				description: orderItem.item.description,
+			orderItems: orderItems.map(orderItem => ({
+				description: orderItem.description,
 				idItem: orderItem.itemId,
-				price: orderItem.price.toNumber(),
+				price: orderItem.price,
 				quantity: orderItem.quantity,
 			})),
 		};

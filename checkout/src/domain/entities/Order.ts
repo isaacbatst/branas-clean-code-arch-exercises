@@ -1,8 +1,8 @@
 import type Coupon from './Coupon';
-import { CouponValidator } from './CouponValidator';
+import {CouponValidator} from './CouponValidator';
 import Cpf from './Cpf';
 import type Item from './Item';
-import { OrderCodeGenerator } from './OrderCodeGenerator';
+import {OrderCodeGenerator} from './OrderCodeGenerator';
 import OrderItem from './OrderItem';
 
 export default class Order {

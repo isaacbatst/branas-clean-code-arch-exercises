@@ -3,7 +3,7 @@ import type {ShippingGateway} from '../../application/gateway/ShippingGateway';
 import type Item from '../../domain/entities/Item';
 import {GatewayError} from '../../domain/errors/GatewayError';
 
-export class ShippingGatewayImpl implements ShippingGateway {
+export class ShippingGatewayHttp implements ShippingGateway {
 	private readonly shippingUrl: string;
 
 	constructor() {

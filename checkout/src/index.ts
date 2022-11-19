@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import {App} from './app';
-import {ShippingGatewayImpl} from './infra/gateway/ShippingGatewayImpl';
+import {ItemGatewayHttp} from './infra/gateway/ItemGatewayHttp';
+import {ShippingGatewayHttp} from './infra/gateway/ShippingGatewayHttp';
 
-const shippingGateway = new ShippingGatewayImpl();
-const app = new App(shippingGateway);
+const shippingGateway = new ShippingGatewayHttp();
+const itemGateway = new ItemGatewayHttp();
+const app = new App(shippingGateway, itemGateway);
 
 app.httpServer.listen(Number(process.env.API_PORT));
 

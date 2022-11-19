@@ -1,41 +1,18 @@
 import {Checkout} from '../../../src/application/usecases/Checkout';
 import Coupon from '../../../src/domain/entities/Coupon';
-import Item from '../../../src/domain/entities/Item';
+import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
-import {ItemRepositoryMemory} from '../../../src/infra/persistence/memory/ItemRepositoryMemory';
+import {OrderProjectionRepositoryMemory} from '../../../src/infra/persistence/memory/OrderProjectionRepositoryMemory';
 import {OrderRepositoryMemory} from '../../../src/infra/persistence/memory/OrderRepositoryMemory';
-
-const guitar = {
-	id: 1,
-	description: 'Guitarra',
-	depth: 10,
-	height: 100,
-	width: 30,
-	price: 1000,
-	weight: 3,
-	addressCep: 'any-address',
-};
-
-const amp = {
-	id: 2,
-	description: 'amp',
-	depth: 8,
-	height: 15,
-	width: 14,
-	price: 5000,
-	weight: 1,
-	addressCep: 'any-address',
-};
 
 const makeSut = async () => {
 	const orderRepository = new OrderRepositoryMemory();
 	const couponRepository = new CouponRepositoryMemory();
-	const itemRepository = new ItemRepositoryMemory();
 	const shippingGateway = new ShippingGatewayFake();
-	await itemRepository.addItem(new Item(guitar));
-	await itemRepository.addItem(new Item(amp));
-	const checkout = new Checkout(orderRepository, couponRepository, itemRepository, shippingGateway);
+	const itemGateway = new ItemGatewayFake();
+	const orderProjectionRepository = new OrderProjectionRepositoryMemory();
+	const checkout = new Checkout(orderRepository, orderProjectionRepository, couponRepository, itemGateway, shippingGateway);
 
 	return {
 		orderRepository,
@@ -115,5 +92,5 @@ test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
 			coupon: 'VALE20',
 			destination: 'any-destination',
 		});
-	}).rejects.toThrow('COUPON_NOT_FOUND');
+	}).rejects.toThrow('Cupom não encontrado');
 });

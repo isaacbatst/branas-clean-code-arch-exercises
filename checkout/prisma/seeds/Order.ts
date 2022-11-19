@@ -3,29 +3,49 @@ import prisma from '../../src/infra/persistence/prisma/prisma';
 export const seedOrders = async () => {
 	console.log('Seeding orders...');
 
+	const orderData = {
+		code: '202200000001',
+		cpf: '317.153.361-86',
+		destination: '71692-404',
+		date: new Date(),
+		total: 7070.38,
+		orderItems: [
+			{
+				itemId: 1,
+				price: 1000,
+				quantity: 2,
+				description: 'Guitarra',
+			},
+			{
+				itemId: 2,
+				price: 5000,
+				quantity: 1,
+				description: 'Amplificador',
+			},
+		],
+	};
+
 	await prisma.order.create({
 		data: {
-			code: '202200000001',
-			cpf: '317.153.361-86',
-			destination: '71692-404',
-			date: new Date(),
-			total: 7070.38,
+			...orderData,
 			orderItems: {
 				createMany: {
-					data: [
-						{
-							itemId: 1,
-							price: 1000,
-							quantity: 2,
-						},
-						{
-							itemId: 2,
-							price: 5000,
-							quantity: 1,
-						},
-					],
+					data: orderData.orderItems.map(item => ({
+						itemId: item.itemId,
+						price: item.price,
+						quantity: item.quantity,
+					})),
 				},
 			},
+		},
+	});
+
+	console.log('Seeding order projections...');
+
+	await prisma.orderProjection.create({
+		data: {
+			...orderData,
+			orderItems: orderData.orderItems,
 		},
 	});
 };
