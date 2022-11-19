@@ -16,6 +16,7 @@
 - [x] Criar testes de integração para a API e os casos de uso
 - [X] Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira
 - [X] Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/cccat7_freight
+- [X] Separar os bounded contexts em microserviços diferentes
 
 ## Importante
 Implemente os DTOs para cada um dos use cases
