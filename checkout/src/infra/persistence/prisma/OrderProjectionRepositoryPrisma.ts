@@ -27,6 +27,7 @@ export class OrderProjectionRepositoryPrisma implements OrderProjectionRepositor
 				date: order.date,
 				destination: order.destination,
 				total: order.getTotal(),
+				status: order.getStatus(),
 				couponCode: order.getCoupon()?.code,
 				orderItems: orderItemsProjection,
 			},

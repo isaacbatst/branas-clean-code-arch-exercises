@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "OrderStatuses" AS ENUM ('waitingPayment', 'canceled');
+
 -- CreateTable
 CREATE TABLE "Coupon" (
     "id" SERIAL NOT NULL,
@@ -28,6 +31,7 @@ CREATE TABLE "Order" (
     "total" DECIMAL(10,2) NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "destination" TEXT NOT NULL,
+    "status" "OrderStatuses" NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -42,6 +46,7 @@ CREATE TABLE "OrderProjection" (
     "date" TIMESTAMP(3) NOT NULL,
     "destination" TEXT NOT NULL,
     "orderItems" JSONB NOT NULL,
+    "status" "OrderStatuses" NOT NULL,
 
     CONSTRAINT "OrderProjection_pkey" PRIMARY KEY ("id")
 );

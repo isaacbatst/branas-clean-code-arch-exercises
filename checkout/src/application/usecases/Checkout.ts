@@ -1,8 +1,11 @@
 import Order from '../../domain/entities/Order';
+import {OrderCodeGenerator} from '../../domain/entities/OrderCodeGenerator';
+import {OrderStatuses} from '../../domain/entities/OrderStatus';
 import {GatewayError} from '../../domain/errors/GatewayError';
 import {NotFoundError} from '../../domain/errors/NotFoundError';
 import type {ItemGateway} from '../gateway/ItemGateway';
 import type {ShippingGateway} from '../gateway/ShippingGateway';
+import type {StockGateway} from '../gateway/StockGateway';
 import type {CouponRepository} from '../repositories/CouponRepository';
 import type {OrderProjectionRepository} from '../repositories/OrderProjectionRepository';
 import type {OrderRepository} from '../repositories/OrderRepository';
@@ -26,11 +29,13 @@ export class Checkout {
 		private readonly couponRepository: CouponRepository,
 		private readonly itemGateway: ItemGateway,
 		private readonly shippingGateway: ShippingGateway,
+		private readonly stockGateway: StockGateway,
 	) {}
 
 	async execute(input: Input): Promise<Output> {
 		const count = await this.orderRepository.getCount();
-		const order = new Order(input.cpf, new Date(), count, input.destination);
+		const orderCode = OrderCodeGenerator.generate(new Date(), count);
+		const order = new Order(input.cpf, new Date(), orderCode, input.destination, OrderStatuses.waitingPayment);
 
 		const items = await Promise.all(input.items.map(async ({id, quantity}) => {
 			const item = await this.itemGateway.getById(id);
@@ -64,6 +69,10 @@ export class Checkout {
 
 		await this.orderRepository.save(order);
 		await this.orderProjectionRepository.save(order, items.map(({item}) => item));
+
+		await Promise.all(
+			items.map(async ({item, quantity}) => this.stockGateway.decrement(item.idItem, quantity)),
+		);
 
 		return {
 			code: order.code,

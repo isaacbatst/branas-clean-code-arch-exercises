@@ -2,6 +2,7 @@ import {Checkout} from '../../../src/application/usecases/Checkout';
 import Coupon from '../../../src/domain/entities/Coupon';
 import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
+import {StockGatewayFake} from '../../../src/infra/gateway/StockGatewayFake';
 import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
 import {OrderProjectionRepositoryMemory} from '../../../src/infra/persistence/memory/OrderProjectionRepositoryMemory';
 import {OrderRepositoryMemory} from '../../../src/infra/persistence/memory/OrderRepositoryMemory';
@@ -12,7 +13,8 @@ const makeSut = async () => {
 	const shippingGateway = new ShippingGatewayFake();
 	const itemGateway = new ItemGatewayFake();
 	const orderProjectionRepository = new OrderProjectionRepositoryMemory();
-	const checkout = new Checkout(orderRepository, orderProjectionRepository, couponRepository, itemGateway, shippingGateway);
+	const stockGateway = new StockGatewayFake();
+	const checkout = new Checkout(orderRepository, orderProjectionRepository, couponRepository, itemGateway, shippingGateway, stockGateway);
 
 	return {
 		orderRepository,

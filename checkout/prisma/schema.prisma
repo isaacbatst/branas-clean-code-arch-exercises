@@ -27,25 +27,32 @@ model OrderItem {
   orderId  Int
 }
 
+enum OrderStatuses {
+  waitingPayment
+  canceled
+}
+
 model Order {
-  id          Int         @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   cpf         String
-  code        String      @unique
-  coupon      Coupon?     @relation(fields: [couponCode], references: [code])
+  code        String        @unique
+  coupon      Coupon?       @relation(fields: [couponCode], references: [code])
   couponCode  String?
-  total       Decimal     @db.Decimal(10, 2)
+  total       Decimal       @db.Decimal(10, 2)
   date        DateTime
   destination String
   orderItems  OrderItem[]
+  status      OrderStatuses
 }
 
 model OrderProjection {
-  id          Int         @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   cpf         String
-  code        String      @unique
+  code        String   @unique
   couponCode  String?
-  total       Decimal     @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
   date        DateTime
   destination String
   orderItems  Json
+  status OrderStatuses
 }

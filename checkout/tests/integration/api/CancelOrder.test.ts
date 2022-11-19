@@ -10,23 +10,19 @@ const makeSut = () => {
 	const stockGateway = new StockGatewayFake();
 	const app = new App(shippingGateway, itemGateway, stockGateway);
 
-	return app;
+	return app.httpServer.app;
 };
 
-test('GET /order/:code com pedido existente', async () => {
+test('POST /order/cancel', async () => {
 	const app = makeSut();
 
-	const response = await request(app.httpServer.app).get('/order/202200000001');
+	const firstResponse = await request(app)
+		.post('/order/cancel/202200000001');
 
-	expect(response.status).toBe(200);
-	expect(response.body.code).toBe('202200000001');
-	expect(response.body.total).toBe(7070.38);
-});
+	expect(firstResponse.status).toBe(200);
 
-test('GET /order/:code com pedido inexistente', async () => {
-	const app = makeSut();
+	const secondResponse = await request(app)
+		.post('/order/cancel/202200000001');
 
-	const response = await request(app.httpServer.app).get('/order/200000010000');
-
-	expect(response.status).toBe(404);
+	expect(secondResponse.status).toBe(409);
 });

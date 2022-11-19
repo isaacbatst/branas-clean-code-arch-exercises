@@ -2,11 +2,19 @@ import request from 'supertest';
 import {App} from '../../../src/app';
 import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
+import {StockGatewayFake} from '../../../src/infra/gateway/StockGatewayFake';
 
-test('POST /checkout com um item', async () => {
+const makeSut = () => {
 	const shippingGateway = new ShippingGatewayFake();
 	const itemGateway = new ItemGatewayFake();
-	const app = new App(shippingGateway, itemGateway);
+	const stockGateway = new StockGatewayFake();
+	const app = new App(shippingGateway, itemGateway, stockGateway);
+
+	return app;
+};
+
+test('POST /checkout com um item', async () => {
+	const app = makeSut();
 	const response = await request(app.httpServer.app)
 		.post('/checkout')
 		.send({
@@ -25,9 +33,8 @@ test('POST /checkout com um item', async () => {
 });
 
 test('POST /checkout com dois itens', async () => {
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const app = new App(shippingGateway, itemGateway);
+	const app = makeSut();
+
 	const response = await request(app.httpServer.app).post('/checkout')
 		.send({
 			cpf: '317.153.361-86',
@@ -49,9 +56,7 @@ test('POST /checkout com dois itens', async () => {
 });
 
 test('POST /checkout com cupom de desconto', async () => {
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const app = new App(shippingGateway, itemGateway);
+	const app = makeSut();
 
 	const response = await request(app.httpServer.app).post('/checkout')
 		.send({
@@ -75,9 +80,7 @@ test('POST /checkout com cupom de desconto', async () => {
 });
 
 test('POST /checkout com cupom inexistente', async () => {
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const app = new App(shippingGateway, itemGateway);
+	const app = makeSut();
 
 	const response = await request(app.httpServer.app).post('/checkout')
 		.send({

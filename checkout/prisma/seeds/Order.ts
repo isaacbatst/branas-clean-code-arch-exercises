@@ -1,3 +1,4 @@
+import {OrderStatuses} from '@prisma/client';
 import prisma from '../../src/infra/persistence/prisma/prisma';
 
 export const seedOrders = async () => {
@@ -9,6 +10,7 @@ export const seedOrders = async () => {
 		destination: '71692-404',
 		date: new Date(),
 		total: 7070.38,
+		status: OrderStatuses.waitingPayment,
 		orderItems: [
 			{
 				itemId: 1,

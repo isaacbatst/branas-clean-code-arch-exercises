@@ -8,9 +8,9 @@
 - [X] Deve retornar a lista de pedidos (caso de uso)
 - [X] Calcule a distância entre dois CEPs e utilize no algoritmo de cálculo do frete
 - [X] Deve calcular frete (caso de uso)
-- [] Deve reduzir o estoque ao realizar o pedido de um item
+- [X] Deve reduzir o estoque ao realizar o pedido de um item
 - [] Deve aumentar o estoque ao cancelar um pedido
-- [] Coloque o estoque em um bounded context
+- [X] Coloque o estoque em um bounded context
 
 
 ## Considere

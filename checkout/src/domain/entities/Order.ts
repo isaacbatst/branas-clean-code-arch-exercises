@@ -1,9 +1,10 @@
+import {ConflictError} from '../errors/ConflictError';
 import type Coupon from './Coupon';
 import {CouponValidator} from './CouponValidator';
 import Cpf from './Cpf';
 import type Item from './Item';
-import {OrderCodeGenerator} from './OrderCodeGenerator';
 import OrderItem from './OrderItem';
+import {OrderStatus, OrderStatuses} from './OrderStatus';
 
 export default class Order {
 	readonly cpf: Cpf;
@@ -11,14 +12,16 @@ export default class Order {
 	readonly code: string;
 	readonly date: Date;
 	readonly destination: string;
+	private status: OrderStatus;
 	private coupon?: Coupon;
 
-	constructor(cpf: string, date: Date, ordersCount: number, destination: string) {
+	constructor(cpf: string, date: Date, code: string, destination: string, status: string) {
 		this.cpf = new Cpf(cpf);
+		this.status = new OrderStatus(status);
 		this.orderItems = [];
 		this.date = date;
 		this.destination = destination;
-		this.code = OrderCodeGenerator.generate(date, ordersCount);
+		this.code = code;
 	}
 
 	addItem(item: Item, quantity: number, shipping: number) {
@@ -55,5 +58,17 @@ export default class Order {
 
 	getCoupon() {
 		return this.coupon;
+	}
+
+	getStatus() {
+		return this.status.value;
+	}
+
+	cancel() {
+		if (this.status.value === OrderStatuses.canceled) {
+			throw new ConflictError('Pedido já cancelado');
+		}
+
+		this.status = new OrderStatus(OrderStatuses.canceled);
 	}
 }
