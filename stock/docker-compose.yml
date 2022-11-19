@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  stock_http: 
+    image: node:16
+    build: .
+    environment:
+      DATABASE_URL: postgresql://example:example@db:5432/mydb?schema=public
+    depends_on:
+      - "stock_db"
+  stock_db:
+    image: postgres
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: example
