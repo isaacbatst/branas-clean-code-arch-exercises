@@ -9,7 +9,7 @@
 - [X] Calcule a distância entre dois CEPs e utilize no algoritmo de cálculo do frete
 - [X] Deve calcular frete (caso de uso)
 - [X] Deve reduzir o estoque ao realizar o pedido de um item
-- [] Deve aumentar o estoque ao cancelar um pedido
+- [X] Deve aumentar o estoque ao cancelar um pedido
 - [X] Coloque o estoque em um bounded context
 
 
