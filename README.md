@@ -1,4 +1,4 @@
-# Project 4
+# Project - Part 6
 ## Testes
 - [x] Deve gerar o código do pedido
 - [x] Deve fazer um pedido (caso de uso)
