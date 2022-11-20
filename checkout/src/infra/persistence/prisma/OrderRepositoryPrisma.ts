@@ -1,5 +1,6 @@
 import {Decimal} from '@prisma/client/runtime';
 import type {OrderRepository} from '../../../application/repositories/OrderRepository';
+import Coupon from '../../../domain/entities/Coupon';
 import Order from '../../../domain/entities/Order';
 import {NotFoundError} from '../../../domain/errors/NotFoundError';
 import prisma from './prisma';
@@ -36,19 +37,44 @@ export class OrderRepositoryPrisma implements OrderRepository {
 			where: {
 				code,
 			},
+			include: {
+				orderItems: true,
+				coupon: true,
+			},
 		});
 
 		if (!prismaOrder) {
 			throw new NotFoundError('Pedido não encontrado');
 		}
 
-		return new Order(
+		const order = new Order(
 			prismaOrder.cpf,
 			prismaOrder.date,
 			prismaOrder.code,
 			prismaOrder.destination,
 			prismaOrder.status,
 		);
+
+		prismaOrder.orderItems.forEach(orderItem => {
+			order.addItem(
+				{
+					idItem: orderItem.itemId,
+					price: orderItem.price.toNumber(),
+					quantity: orderItem.quantity,
+					shipping: orderItem.shipping.toNumber(),
+				},
+			);
+		});
+
+		if (prismaOrder.coupon) {
+			order.addCoupon(new Coupon(
+				prismaOrder.coupon.code,
+				prismaOrder.coupon.percentage,
+				prismaOrder.coupon.expireDate,
+			));
+		}
+
+		return order;
 	}
 
 	async save(order: Order): Promise<void> {
@@ -73,6 +99,7 @@ export class OrderRepositoryPrisma implements OrderRepository {
 						itemId: item.idItem,
 						price: item.price,
 						quantity: item.quantity,
+						shipping: item.shipping,
 					})),
 				},
 			},

@@ -39,7 +39,6 @@ export class Checkout {
 
 		const items = await Promise.all(input.items.map(async ({id, quantity}) => {
 			const item = await this.itemGateway.getById(id);
-
 			return {
 				item,
 				quantity,
@@ -53,23 +52,25 @@ export class Checkout {
 
 		items.forEach(({item, quantity}) => {
 			const shippingItem = shippings.find(shippingItem => shippingItem.id === item.idItem);
-
 			if (!shippingItem) {
 				throw new GatewayError('Frete de item não calculado');
 			}
 
-			order.addItem(item, quantity, shippingItem.shipping);
+			order.addItem({
+				idItem: item.idItem,
+				price: item.price,
+				quantity,
+				shipping: shippingItem.shipping,
+			});
 		});
 
 		if (input.coupon) {
 			const coupon = await this.couponRepository.getByCode(input.coupon);
-
 			order.addCoupon(coupon);
 		}
 
 		await this.orderRepository.save(order);
 		await this.orderProjectionRepository.save(order, items.map(({item}) => item));
-
 		await Promise.all(
 			items.map(async ({item, quantity}) => this.stockGateway.decrement(item.idItem, quantity)),
 		);

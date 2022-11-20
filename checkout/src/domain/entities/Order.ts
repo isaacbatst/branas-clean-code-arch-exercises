@@ -2,7 +2,6 @@ import {ConflictError} from '../errors/ConflictError';
 import type Coupon from './Coupon';
 import {CouponValidator} from './CouponValidator';
 import Cpf from './Cpf';
-import type Item from './Item';
 import OrderItem from './OrderItem';
 import {OrderStatus, OrderStatuses} from './OrderStatus';
 
@@ -24,14 +23,14 @@ export default class Order {
 		this.code = code;
 	}
 
-	addItem(item: Item, quantity: number, shipping: number) {
+	addItem(item: {idItem: number; price: number; quantity: number; shipping: number}) {
 		const isSomeEqual = this.orderItems.some(orderItem => orderItem.idItem === item.idItem);
 
 		if (isSomeEqual) {
 			throw new Error('Item duplicado');
 		}
 
-		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity, shipping));
+		this.orderItems.push(new OrderItem(item.idItem, item.price, item.quantity, item.shipping));
 	}
 
 	addCoupon(coupon: Coupon) {

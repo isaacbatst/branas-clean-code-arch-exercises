@@ -16,6 +16,7 @@ CREATE TABLE "OrderItem" (
     "id" SERIAL NOT NULL,
     "itemId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
+    "shipping" DECIMAL(10,2) NOT NULL,
     "price" DECIMAL(10,2) NOT NULL,
     "orderId" INTEGER NOT NULL,
 

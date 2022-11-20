@@ -51,18 +51,18 @@ test('Deve criar um pedido sem itens', () => {
 
 test('Deve criar um pedido com 3 itens', () => {
 	const order = new Order('317.153.361-86', new Date(), 'any-code', 'any-destination', OrderStatuses.waitingPayment);
-	order.addItem(new Item(guitar), 1, guitar.shipping);
-	order.addItem(new Item(amp), 1, amp.shipping);
-	order.addItem(new Item(cable), 3, cable.shipping);
+	order.addItem({idItem: guitar.id, price: guitar.price, quantity: 1, shipping: guitar.shipping});
+	order.addItem({idItem: amp.id, price: amp.price, quantity: 1, shipping: amp.shipping});
+	order.addItem({idItem: cable.id, price: cable.price, quantity: 3, shipping: cable.shipping});
 	const total = order.getTotal();
 	expect(total).toBe(6250);
 });
 
 test('Deve criar um pedido com 3 itens com cupom de desconto', () => {
 	const order = new Order('317.153.361-86', new Date(), 'any-code', 'any-destination', OrderStatuses.waitingPayment);
-	order.addItem(new Item(guitar), 1, guitar.shipping);
-	order.addItem(new Item(amp), 1, amp.shipping);
-	order.addItem(new Item(cable), 3, cable.shipping);
+	order.addItem({idItem: guitar.id, price: guitar.price, quantity: 1, shipping: guitar.shipping});
+	order.addItem({idItem: amp.id, price: amp.price, quantity: 1, shipping: amp.shipping});
+	order.addItem({idItem: cable.id, price: cable.price, quantity: 3, shipping: cable.shipping});
 
 	const tomorrow = new Date();
 	tomorrow.setDate(tomorrow.getDate() + 1);
@@ -84,22 +84,20 @@ test('Não deve aplicar um cupom de desconto expirado', () => {
 test('Ao fazer um pedido, a quantidade de um item não pode ser negativa', () => {
 	expect(() => {
 		const order = new Order('317.153.361-86', new Date(), 'any-code', 'any-destination', OrderStatuses.waitingPayment);
-		order.addItem(new Item(guitar), -1, guitar.shipping);
+		order.addItem({idItem: guitar.id, price: guitar.price, quantity: -1, shipping: guitar.shipping});
 	}).toThrow('Quantidade não pode ser negativa');
 });
 
 test('Ao fazer um pedido, o mesmo item não pode ser informado mais de uma vez', () => {
 	expect(() => {
 		const order = new Order('317.153.361-86', new Date(), 'any-code', 'any-destination', OrderStatuses.waitingPayment);
-		order.addItem(new Item(guitar), 1, guitar.shipping);
-		order.addItem(new Item(guitar), 1, guitar.shipping);
+		order.addItem({idItem: guitar.id, price: guitar.price, quantity: 1, shipping: guitar.shipping});
+		order.addItem({idItem: guitar.id, price: guitar.price, quantity: 1, shipping: guitar.shipping});
 	}).toThrowError('Item duplicado');
 });
 
 test('Ao fazer pedido, deve ser possível cancelá-lo', () => {
 	const order = new Order('317.153.361-86', new Date('2015-10-05'), 'any-code', 'any-destination', OrderStatuses.waitingPayment);
-
 	order.cancel();
-
 	expect(order.getStatus()).toBe(OrderStatuses.canceled);
 });

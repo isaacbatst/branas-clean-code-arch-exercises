@@ -15,6 +15,7 @@ export const seedOrders = async () => {
 			{
 				itemId: 1,
 				price: 1000,
+				shipping: 10,
 				quantity: 2,
 				description: 'Guitarra',
 			},
@@ -22,6 +23,7 @@ export const seedOrders = async () => {
 				itemId: 2,
 				price: 5000,
 				quantity: 1,
+				shipping: 10,
 				description: 'Amplificador',
 			},
 		],
@@ -36,6 +38,7 @@ export const seedOrders = async () => {
 						itemId: item.itemId,
 						price: item.price,
 						quantity: item.quantity,
+						shipping: item.shipping,
 					})),
 				},
 			},

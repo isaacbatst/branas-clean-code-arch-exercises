@@ -22,6 +22,7 @@ model OrderItem {
   id       Int     @id @default(autoincrement())
   itemId   Int
   quantity Int
+  shipping    Decimal @db.Decimal(10, 2)
   price    Decimal @db.Decimal(10, 2)
   order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId  Int
