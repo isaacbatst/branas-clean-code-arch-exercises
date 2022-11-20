@@ -2,7 +2,6 @@ import Order from '../../domain/entities/Order';
 import {OrderCodeGenerator} from '../../domain/entities/OrderCodeGenerator';
 import {OrderStatuses} from '../../domain/entities/OrderStatus';
 import {GatewayError} from '../../domain/errors/GatewayError';
-import {NotFoundError} from '../../domain/errors/NotFoundError';
 import type {ItemGateway} from '../gateway/ItemGateway';
 import type {ShippingGateway} from '../gateway/ShippingGateway';
 import type {StockGateway} from '../gateway/StockGateway';

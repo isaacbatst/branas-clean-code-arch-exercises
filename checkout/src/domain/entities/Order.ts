@@ -1,62 +1,45 @@
 import {ConflictError} from '../errors/ConflictError';
 import type Coupon from './Coupon';
-import {CouponValidator} from './CouponValidator';
 import Cpf from './Cpf';
-import OrderItem from './OrderItem';
+import {OrderFinance} from './OrderFinance';
 import {OrderStatus, OrderStatuses} from './OrderStatus';
 
 export default class Order {
 	readonly cpf: Cpf;
-	readonly orderItems: OrderItem[];
+
 	readonly code: string;
 	readonly date: Date;
 	readonly destination: string;
 	private status: OrderStatus;
-	private coupon?: Coupon;
+	private readonly orderFinance: OrderFinance;
 
 	constructor(cpf: string, date: Date, code: string, destination: string, status: string) {
 		this.cpf = new Cpf(cpf);
 		this.status = new OrderStatus(status);
-		this.orderItems = [];
+		this.orderFinance = new OrderFinance();
 		this.date = date;
 		this.destination = destination;
 		this.code = code;
 	}
 
 	addItem(item: {idItem: number; price: number; quantity: number; shipping: number}) {
-		const isSomeEqual = this.orderItems.some(orderItem => orderItem.idItem === item.idItem);
-
-		if (isSomeEqual) {
-			throw new Error('Item duplicado');
-		}
-
-		this.orderItems.push(new OrderItem(item.idItem, item.price, item.quantity, item.shipping));
+		this.orderFinance.addItem(item);
 	}
 
 	addCoupon(coupon: Coupon) {
-		if (!CouponValidator.validate(coupon, this.date)) {
-			throw new Error('Cupom expirado');
-		}
-
-		this.coupon = coupon;
+		this.orderFinance.addCoupon(coupon, this.date);
 	}
 
 	getTotal() {
-		let total = this.orderItems
-			.reduce((total, orderItem) => {
-				total += orderItem.getTotal();
-				return Number(total.toFixed(2));
-			}, 0);
-
-		if (this.coupon) {
-			total -= this.coupon.calculateDiscount(total);
-		}
-
-		return total;
+		return this.orderFinance.getTotal();
 	}
 
 	getCoupon() {
-		return this.coupon;
+		return this.orderFinance.getCoupon();
+	}
+
+	get orderItems() {
+		return this.orderFinance.orderItems;
 	}
 
 	getStatus() {
