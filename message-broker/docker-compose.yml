@@ -1,0 +1,8 @@
+version: '3.1'
+
+services:
+  message_broker: 
+    image: rabbitmq:3.11-management
+    ports:
+      - 5672:5672
+      - 15672:15672
