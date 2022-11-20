@@ -1,11 +1,11 @@
+import type {ItemDto} from '../../application/gateway/ItemGateway';
 import type {ShippingGateway} from '../../application/gateway/ShippingGateway';
-import type Item from '../../domain/entities/Item';
 
 export class ShippingGatewayFake implements ShippingGateway {
 	async calculateShipping(params: {
 		destination: string;
 		orderItems: Array<{
-			item: Item;
+			item: ItemDto;
 			quantity: number;
 		}>;
 	}): Promise<Array<{id: number; shipping: number}>> {

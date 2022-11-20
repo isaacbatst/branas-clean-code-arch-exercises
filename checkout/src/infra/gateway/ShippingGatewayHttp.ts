@@ -1,6 +1,6 @@
 import axios from 'axios';
+import type {ItemDto} from '../../application/gateway/ItemGateway';
 import type {ShippingGateway} from '../../application/gateway/ShippingGateway';
-import type Item from '../../domain/entities/Item';
 import {GatewayError} from '../../domain/errors/GatewayError';
 
 export class ShippingGatewayHttp implements ShippingGateway {
@@ -17,7 +17,7 @@ export class ShippingGatewayHttp implements ShippingGateway {
 	async calculateShipping(params: {
 		destination: string;
 		orderItems: Array<{
-			item: Item;
+			item: ItemDto;
 			quantity: number;
 		}>;
 	}): Promise<Array<{id: number; shipping: number}>> {
@@ -38,19 +38,12 @@ export class ShippingGatewayHttp implements ShippingGateway {
 	}
 
 	private mapToBodyOrderItems(orderItems: Array<{
-		item: Item;
+		item: ItemDto;
 		quantity: number;
 	}>) {
 		const body = orderItems.map(({item, quantity}) => ({
-			id: item.idItem,
-			dimensions: {
-				width: item.dimensions.width,
-				height: item.dimensions.height,
-				depth: item.dimensions.depth,
-			},
-			weight: item.weight,
+			...item,
 			quantity,
-			origin: item.addressCep,
 		}));
 
 		return body;

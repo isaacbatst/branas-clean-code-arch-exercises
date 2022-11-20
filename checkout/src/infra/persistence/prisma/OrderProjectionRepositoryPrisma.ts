@@ -1,10 +1,10 @@
+import type {ItemDto} from '../../../application/gateway/ItemGateway';
 import type {OrderProjectionRepository} from '../../../application/repositories/OrderProjectionRepository';
-import type Item from '../../../domain/entities/Item';
 import type Order from '../../../domain/entities/Order';
 import prisma from './prisma';
 
 export class OrderProjectionRepositoryPrisma implements OrderProjectionRepository {
-	async save(order: Order, items: Item[]): Promise<void> {
+	async save(order: Order, items: ItemDto[]): Promise<void> {
 		const orderItemsProjection = order.orderItems.map(orderItem => {
 			const item = items.find(item => orderItem.idItem === item.idItem);
 

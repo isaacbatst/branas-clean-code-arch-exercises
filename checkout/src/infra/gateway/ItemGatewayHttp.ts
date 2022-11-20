@@ -1,6 +1,5 @@
 import axios from 'axios';
-import type {ItemGateway} from '../../application/gateway/ItemGateway';
-import Item from '../../domain/entities/Item';
+import type {ItemDto, ItemGateway} from '../../application/gateway/ItemGateway';
 import {GatewayError} from '../../domain/errors/GatewayError';
 
 export class ItemGatewayHttp implements ItemGateway {
@@ -14,7 +13,7 @@ export class ItemGatewayHttp implements ItemGateway {
 		this.catalogUrl = process.env.CATALOG_SERVICE_URL;
 	}
 
-	async getById(id: number): Promise<Item> {
+	async getById(id: number): Promise<ItemDto> {
 		try {
 			const response = await axios.get<{
 				id: number;
@@ -27,16 +26,18 @@ export class ItemGatewayHttp implements ItemGateway {
 				addressCep: string;
 			}>(`${this.catalogUrl}/item/${id}`);
 
-			return new Item({
+			return {
 				addressCep: response.data.addressCep,
-				depth: response.data.depth,
-				description: response.data.description,
-				height: response.data.height,
-				id: response.data.id,
-				price: response.data.price,
+				dimensions: {
+					depth: response.data.depth,
+					width: response.data.width,
+					height: response.data.height,
+				},
 				weight: response.data.weight,
-				width: response.data.width,
-			});
+				description: response.data.description,
+				idItem: response.data.id,
+				price: response.data.price,
+			};
 		} catch (err: unknown) {
 			throw new GatewayError('Erro ao recuperar items');
 		}

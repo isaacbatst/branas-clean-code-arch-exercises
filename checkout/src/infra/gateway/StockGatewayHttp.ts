@@ -1,6 +1,5 @@
 import axios from 'axios';
 import type {StockGateway} from '../../application/gateway/StockGateway';
-import Item from '../../domain/entities/Item';
 import {GatewayError} from '../../domain/errors/GatewayError';
 
 export class StockGatewayHttp implements StockGateway {
@@ -16,10 +15,22 @@ export class StockGatewayHttp implements StockGateway {
 
 	async decrement(idItem: number, quantity: number): Promise<void> {
 		try {
-			await axios.post('/stock-entry', {
+			await axios.post(`${this.stockUrl}/stock-entry`, {
 				idItem,
 				quantity,
 				operation: 'decrement',
+			});
+		} catch (err: unknown) {
+			throw new GatewayError('Erro ao atualizar estoque');
+		}
+	}
+
+	async increment(idItem: number, quantity: number): Promise<void> {
+		try {
+			await axios.post(`${this.stockUrl}/stock-entry`, {
+				idItem,
+				quantity,
+				operation: 'increment',
 			});
 		} catch (err: unknown) {
 			throw new GatewayError('Erro ao atualizar estoque');
