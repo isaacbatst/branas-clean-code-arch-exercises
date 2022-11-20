@@ -1,8 +1,10 @@
 import {OrderFinance} from '../../domain/entities/OrderFinance';
 import {GatewayError} from '../../domain/errors/GatewayError';
+import type {GatewayFactory} from '../gateway/GatewayFactory';
 import type {ItemGateway} from '../gateway/ItemGateway';
 import type {ShippingGateway} from '../gateway/ShippingGateway';
 import type {CouponRepository} from '../repositories/CouponRepository';
+import type {RepositoryFactory} from '../repositories/RepositoryFactory';
 
 type Input = {
 	items: Array<{id: number; quantity: number}>;
@@ -15,13 +17,19 @@ type Output = {
 };
 
 export class Preview {
+	private readonly itemGateway: ItemGateway;
+	private readonly shippingGateway: ShippingGateway;
+	private readonly couponRepository: CouponRepository;
 	constructor(
-		private readonly couponRepository: CouponRepository,
-		private readonly itemGateway: ItemGateway,
-		private readonly shippingGateway: ShippingGateway,
-	) {}
+		repositoryFactory: RepositoryFactory,
+		gatewayFactory: GatewayFactory,
+	) {
+		this.couponRepository = repositoryFactory.couponRepository;
+		this.itemGateway = gatewayFactory.itemGateway;
+		this.shippingGateway = gatewayFactory.shippingGateway;
+	}
 
-	async execute(input: Input) {
+	async execute(input: Input): Promise<Output> {
 		const orderFinance = new OrderFinance();
 
 		const items = await Promise.all(input.items.map(async ({id, quantity}) => ({

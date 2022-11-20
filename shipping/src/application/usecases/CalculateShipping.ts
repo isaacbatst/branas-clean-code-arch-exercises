@@ -8,7 +8,7 @@ import type {CityRepository} from '../repositories/CityRepository';
 type Input = {
 	destination: string;
 	orderItems: Array<{
-		id: number;
+		idItem: number;
 		dimensions: {
 			depth: number;
 			height: number;
@@ -35,7 +35,7 @@ export class CalculateShipping {
 			const itemShipping = ShippingCalculator.calculate(orderItem, distance) * orderItem.quantity;
 
 			return {
-				id: orderItem.id,
+				id: orderItem.idItem,
 				shipping: itemShipping,
 			};
 		}));

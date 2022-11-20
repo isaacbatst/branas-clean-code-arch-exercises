@@ -1,4 +1,5 @@
 import {SimulateShipping} from '../../../src/application/usecases/SimulateShipping';
+import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 
@@ -24,10 +25,15 @@ const amp = {
 	addressCep: 'any-address',
 };
 
+const makeSut = () => {
+	const gatewayFactory = new GatewayFactoryFake();
+	const simulateShipping = new SimulateShipping(gatewayFactory);
+	return {simulateShipping};
+};
+
 test('Ao simular o frete deve retornar valor', async () => {
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const simulateShipping = new SimulateShipping(itemGateway, shippingGateway);
+	const {simulateShipping} = makeSut();
+
 	const shippingPrice = await simulateShipping.execute({
 		orderItems: [
 			{id: 1, quantity: 1},
@@ -40,9 +46,7 @@ test('Ao simular o frete deve retornar valor', async () => {
 });
 
 test('Ao simular frete com produto não existente deve lançar erro', async () => {
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const simulateShipping = new SimulateShipping(itemGateway, shippingGateway);
+	const {simulateShipping} = makeSut();
 
 	await expect(async () => {
 		await simulateShipping.execute({

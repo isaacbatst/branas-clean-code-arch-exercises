@@ -43,6 +43,7 @@ export class ShippingGatewayHttp implements ShippingGateway {
 	}>) {
 		const body = orderItems.map(({item, quantity}) => ({
 			...item,
+			origin: item.addressCep,
 			quantity,
 		}));
 

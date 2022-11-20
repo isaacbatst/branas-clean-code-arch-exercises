@@ -2,12 +2,14 @@ import Order from '../../domain/entities/Order';
 import {OrderCodeGenerator} from '../../domain/entities/OrderCodeGenerator';
 import {OrderStatuses} from '../../domain/entities/OrderStatus';
 import {GatewayError} from '../../domain/errors/GatewayError';
+import {OrderPlaced} from '../../domain/events/OrderPlaced';
+import type {GatewayFactory} from '../gateway/GatewayFactory';
 import type {ItemGateway} from '../gateway/ItemGateway';
+import type {QueueGateway} from '../gateway/QueueGateway';
 import type {ShippingGateway} from '../gateway/ShippingGateway';
-import type {StockGateway} from '../gateway/StockGateway';
 import type {CouponRepository} from '../repositories/CouponRepository';
-import type {OrderProjectionRepository} from '../repositories/OrderProjectionRepository';
 import type {OrderRepository} from '../repositories/OrderRepository';
+import type {RepositoryFactory} from '../repositories/RepositoryFactory';
 
 type Input = {
 	cpf: string;
@@ -22,14 +24,21 @@ type Output = {
 };
 
 export class Checkout {
+	private readonly orderRepository: OrderRepository;
+	private readonly couponRepository: CouponRepository;
+	private readonly itemGateway: ItemGateway;
+	private readonly shippingGateway: ShippingGateway;
+	private readonly queueGateway: QueueGateway;
 	constructor(
-		private readonly orderRepository: OrderRepository,
-		private readonly orderProjectionRepository: OrderProjectionRepository,
-		private readonly couponRepository: CouponRepository,
-		private readonly itemGateway: ItemGateway,
-		private readonly shippingGateway: ShippingGateway,
-		private readonly stockGateway: StockGateway,
-	) {}
+		repositoryFactory: RepositoryFactory,
+		gatewayFactory: GatewayFactory,
+	) {
+		this.couponRepository = repositoryFactory.couponRepository;
+		this.orderRepository = repositoryFactory.orderRepository;
+		this.itemGateway = gatewayFactory.itemGateway;
+		this.shippingGateway = gatewayFactory.shippingGateway;
+		this.queueGateway = gatewayFactory.queueGateway;
+	}
 
 	async execute(input: Input): Promise<Output> {
 		const count = await this.orderRepository.getCount();
@@ -69,10 +78,7 @@ export class Checkout {
 		}
 
 		await this.orderRepository.save(order);
-		await this.orderProjectionRepository.save(order, items.map(({item}) => item));
-		await Promise.all(
-			items.map(async ({item, quantity}) => this.stockGateway.decrement(item.idItem, quantity)),
-		);
+		await this.queueGateway.publish(new OrderPlaced(order));
 
 		return {
 			code: order.code,

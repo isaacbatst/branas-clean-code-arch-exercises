@@ -1,4 +1,4 @@
-import {NotFoundError} from '../../domain/errors/NotFoundError';
+import type {GatewayFactory} from '../gateway/GatewayFactory';
 import type {ItemGateway} from '../gateway/ItemGateway';
 import type {ShippingGateway} from '../gateway/ShippingGateway';
 
@@ -11,10 +11,14 @@ type Input = {
 };
 
 export class SimulateShipping {
+	private readonly itemGateway: ItemGateway;
+	private readonly shippingGateway: ShippingGateway;
 	constructor(
-		private readonly itemGateway: ItemGateway,
-		private readonly shippingGateway: ShippingGateway,
-	) {}
+		gatewayFactory: GatewayFactory,
+	) {
+		this.itemGateway = gatewayFactory.itemGateway;
+		this.shippingGateway = gatewayFactory.shippingGateway;
+	}
 
 	async execute(input: Input): Promise<number> {
 		const items = await Promise.all(input.orderItems.map(async ({id, quantity}) => {

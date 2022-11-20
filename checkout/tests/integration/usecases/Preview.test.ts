@@ -1,17 +1,15 @@
 import {Preview} from '../../../src/application/usecases/Preview';
 import Coupon from '../../../src/domain/entities/Coupon';
-import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
-import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
-import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
+import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
+import {RepositoryFactoryMemory} from '../../../src/infra/persistence/memory/RepositoryFactoryMemory';
 
 const makeSut = async () => {
-	const couponRepository = new CouponRepositoryMemory();
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const preview = new Preview(couponRepository, itemGateway, shippingGateway);
+	const repositoryFactory = new RepositoryFactoryMemory();
+	const gatewayFactory = new GatewayFactoryFake();
+	const preview = new Preview(repositoryFactory, gatewayFactory);
 
 	return {
-		couponRepository,
+		couponRepository: repositoryFactory.couponRepository,
 		preview,
 	};
 };

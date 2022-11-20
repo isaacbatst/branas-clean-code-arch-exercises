@@ -1,6 +1,7 @@
 export enum OrderStatuses {
 	waitingPayment = 'waitingPayment',
 	canceled = 'canceled',
+	shipped = 'shipped',
 }
 
 export class OrderStatus {

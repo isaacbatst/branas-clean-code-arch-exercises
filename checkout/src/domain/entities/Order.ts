@@ -51,6 +51,10 @@ export default class Order {
 			throw new ConflictError('Pedido já cancelado');
 		}
 
+		if (this.status.value === OrderStatuses.shipped) {
+			throw new ConflictError('Pedido já enviado');
+		}
+
 		this.status = new OrderStatus(OrderStatuses.canceled);
 	}
 }

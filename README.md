@@ -10,8 +10,6 @@
 - [X] Deve calcular frete (caso de uso)
 - [X] Deve reduzir o estoque ao realizar o pedido de um item
 - [X] Deve aumentar o estoque ao cancelar um pedido
-- [X] Coloque o estoque em um bounded context
-
 
 ## Considere
 - [x] O código do pedido é formado por AAAAPPPPPPPP onde AAAA representa o ano e o PPPPPPPP representa um sequencial do pedido
@@ -20,6 +18,10 @@
 - [X] Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira
 - [X] Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/cccat7_freight
 - [X] Separar os bounded contexts em microserviços diferentes
+- [X] Coloque o estoque em um bounded context
+- [] Coloque alteração do estoque em uma operação assíncrona
+- [] Coloque o registro da projeção em uma operação assíncrona
+- [] Coloque o checkout em uma operação assíncrona
 
 
 ## Importante

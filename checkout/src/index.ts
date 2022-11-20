@@ -1,13 +1,16 @@
 import 'dotenv/config';
 import {App} from './app';
-import {ItemGatewayHttp} from './infra/gateway/ItemGatewayHttp';
-import {ShippingGatewayHttp} from './infra/gateway/ShippingGatewayHttp';
-import {StockGatewayHttp} from './infra/gateway/StockGatewayHttp';
+import {GatewayFactoryImpl} from './infra/gateway/GatewayFactoryImpl';
 
-const shippingGateway = new ShippingGatewayHttp();
-const itemGateway = new ItemGatewayHttp();
-const stockGateway = new StockGatewayHttp();
-const app = new App(shippingGateway, itemGateway, stockGateway);
+async function main() {
+	const gatewayFactory = new GatewayFactoryImpl();
+	const app = new App(gatewayFactory);
 
-app.httpServer.listen(Number(process.env.API_PORT));
+	app.httpServer.listen(Number(process.env.API_PORT));
+}
+
+main()
+	.catch(err => {
+		console.error('Main error: ', err);
+	});
 

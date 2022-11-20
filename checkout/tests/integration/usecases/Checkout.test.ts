@@ -1,24 +1,17 @@
 import {Checkout} from '../../../src/application/usecases/Checkout';
 import Coupon from '../../../src/domain/entities/Coupon';
-import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
-import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
-import {StockGatewayFake} from '../../../src/infra/gateway/StockGatewayFake';
-import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
-import {OrderProjectionRepositoryMemory} from '../../../src/infra/persistence/memory/OrderProjectionRepositoryMemory';
-import {OrderRepositoryMemory} from '../../../src/infra/persistence/memory/OrderRepositoryMemory';
+import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
+import {RepositoryFactoryMemory} from '../../../src/infra/persistence/memory/RepositoryFactoryMemory';
 
 const makeSut = async () => {
-	const orderRepository = new OrderRepositoryMemory();
-	const couponRepository = new CouponRepositoryMemory();
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const orderProjectionRepository = new OrderProjectionRepositoryMemory();
-	const stockGateway = new StockGatewayFake();
-	const checkout = new Checkout(orderRepository, orderProjectionRepository, couponRepository, itemGateway, shippingGateway, stockGateway);
+	const repositoryFactory = new RepositoryFactoryMemory();
+	const gatewayFactory = new GatewayFactoryFake();
+	const checkout = new Checkout(repositoryFactory, gatewayFactory);
 
 	return {
-		orderRepository,
-		couponRepository,
+		orderRepository: repositoryFactory.orderRepository,
+		couponRepository: repositoryFactory.couponRepository,
+		queueGateway: gatewayFactory.queueGateway,
 		checkout,
 	};
 };
@@ -95,4 +88,18 @@ test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
 			destination: 'any-destination',
 		});
 	}).rejects.toThrow('Cupom não encontrado');
+});
+
+test('Ao criar o pedido com um item deve publicar evento', async () => {
+	const {checkout, queueGateway} = await makeSut();
+
+	await checkout.execute({
+		cpf: '317.153.361-86',
+		items: [
+			{id: 1, quantity: 1},
+		],
+		destination: 'any-destination',
+	});
+
+	expect(queueGateway.events).toHaveLength(1);
 });

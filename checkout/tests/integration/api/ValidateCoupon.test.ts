@@ -1,14 +1,13 @@
 import request from 'supertest';
 import {App} from '../../../src/app';
+import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
 import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
 import {StockGatewayFake} from '../../../src/infra/gateway/StockGatewayFake';
 
 const makeSut = () => {
-	const shippingGateway = new ShippingGatewayFake();
-	const itemGateway = new ItemGatewayFake();
-	const stockGateway = new StockGatewayFake();
-	const app = new App(shippingGateway, itemGateway, stockGateway);
+	const gatewayFactory = new GatewayFactoryFake();
+	const app = new App(gatewayFactory);
 
 	return app;
 };

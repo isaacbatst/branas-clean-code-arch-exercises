@@ -1,6 +1,4 @@
-import type {ItemGateway} from './application/gateway/ItemGateway';
-import type {ShippingGateway} from './application/gateway/ShippingGateway';
-import type {StockGateway} from './application/gateway/StockGateway';
+import type {GatewayFactory} from './application/gateway/GatewayFactory';
 import {GetOrderByCode} from './application/queries/GetOrderByCode';
 import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
 import {CancelOrder} from './application/usecases/CancelOrder';
@@ -17,29 +15,22 @@ import {SimulateShippingController} from './infra/controller/SimulateShippingCon
 import {ValidateCouponController} from './infra/controller/ValidateCouponController';
 import {HttpServerExpressAdapter} from './infra/http/HttpServerExpressAdapter';
 import {ErrorMiddleware} from './infra/middleware/ErrorMiddleware';
-import {CouponRepositoryPrisma} from './infra/persistence/prisma/CouponRepositoryPrisma';
-import {OrderProjectionRepositoryPrisma} from './infra/persistence/prisma/OrderProjectionRepositoryPrisma';
-import {OrderRepositoryPrisma} from './infra/persistence/prisma/OrderRepositoryPrisma';
+import {RepositoryFactoryPrisma} from './infra/persistence/prisma/RepositoryFactoryPrisma';
 
 export class App {
 	readonly httpServer = new HttpServerExpressAdapter();
 
 	constructor(
-		shippingGateway: ShippingGateway,
-		itemGateway: ItemGateway,
-		stockGateway: StockGateway,
+		gatewayFactory: GatewayFactory,
 	) {
-		const couponRepository = new CouponRepositoryPrisma();
-		const orderRepository = new OrderRepositoryPrisma();
-		const orderProjectionRepository = new OrderProjectionRepositoryPrisma();
-
-		const checkout = new Checkout(orderRepository, orderProjectionRepository, couponRepository, itemGateway, shippingGateway, stockGateway);
-		const validateCoupon = new ValidateCoupon(couponRepository);
-		const simulateShipping = new SimulateShipping(itemGateway, shippingGateway);
+		const repositoryFactory = new RepositoryFactoryPrisma();
+		const checkout = new Checkout(repositoryFactory, gatewayFactory);
+		const validateCoupon = new ValidateCoupon(repositoryFactory);
+		const simulateShipping = new SimulateShipping(gatewayFactory);
 		const getOrderByCode = new GetOrderByCode();
 		const getOrdersByCpf = new GetOrdersByCpf();
-		const cancelOrder = new CancelOrder(orderRepository, stockGateway);
-		const preview = new Preview(couponRepository, itemGateway, shippingGateway);
+		const cancelOrder = new CancelOrder(repositoryFactory, gatewayFactory);
+		const preview = new Preview(repositoryFactory, gatewayFactory);
 
 		const checkoutController = new CheckoutController(checkout);
 		const validateCouponController = new ValidateCouponController(validateCoupon);
