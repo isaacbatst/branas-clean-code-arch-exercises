@@ -1,9 +1,11 @@
 import type {CouponRepository} from './CouponRepository';
+import type {OrderProjectionRepository} from './OrderProjectionRepository';
 import type {OrderRepository} from './OrderRepository';
-import type {RequestedOrderRepository} from './RequestedOrderRepository';
+import type {OrderRequestRepository} from './RequestedOrderRepository';
 
 export type RepositoryFactory = {
 	orderRepository: OrderRepository;
 	couponRepository: CouponRepository;
-	requestedOrderRepository: RequestedOrderRepository;
+	orderRequestRepository: OrderRequestRepository;
+	orderProjectionRepository: OrderProjectionRepository;
 };

@@ -34,6 +34,7 @@ export class HttpServerExpressAdapter implements HttpServer {
 			const {body, statusCode} = await callback({
 				body: req.body,
 				params: req.params,
+				query: req.query,
 			});
 
 			if (!body) {

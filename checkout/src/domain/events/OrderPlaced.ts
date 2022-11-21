@@ -1,6 +1,7 @@
 import {DomainEvent} from './DomainEvent';
 
-type OrderPlacedPayload = {
+export type OrderPlacedPayload = {
+	code: string;
 	orderItems: Array<{
 		idItem: number;
 		quantity: number;

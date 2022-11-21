@@ -1,7 +1,7 @@
-import type {RequestedOrderRepository} from '../../../application/repositories/RequestedOrderRepository';
+import type {OrderRequestRepository} from '../../../application/repositories/RequestedOrderRepository';
 import type {OrderRequest} from '../../../domain/entities/RequestedOrder';
 
-export class RequestedOrderRepositoryMemory implements RequestedOrderRepository {
+export class RequestedOrderRepositoryMemory implements OrderRequestRepository {
 	private readonly requestedOrders: OrderRequest[] = [];
 
 	async getLastInsertedOnYear(year: number): Promise<OrderRequest | undefined> {

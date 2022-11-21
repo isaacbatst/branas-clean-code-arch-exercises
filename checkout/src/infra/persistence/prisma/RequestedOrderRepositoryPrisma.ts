@@ -1,8 +1,8 @@
-import type {RequestedOrderRepository} from '../../../application/repositories/RequestedOrderRepository';
+import type {OrderRequestRepository} from '../../../application/repositories/RequestedOrderRepository';
 import {OrderRequest} from '../../../domain/entities/RequestedOrder';
 import prisma from './prisma';
 
-export class RequestedOrderRepositoryPrisma implements RequestedOrderRepository {
+export class OrderRequestRepositoryPrisma implements OrderRequestRepository {
 	async getLastInsertedOnYear(year: number): Promise<OrderRequest | undefined> {
 		const last = await prisma.orderRequest.findFirst({
 			where: {

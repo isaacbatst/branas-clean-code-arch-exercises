@@ -13,4 +13,5 @@ export type ItemDto = {
 
 export type ItemGateway = {
 	getById(id: number): Promise<ItemDto>;
+	getItems(ids: number[]): Promise<ItemDto[]>;
 };

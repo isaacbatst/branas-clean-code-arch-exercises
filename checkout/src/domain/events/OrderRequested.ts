@@ -1,6 +1,6 @@
 import {DomainEvent} from './DomainEvent';
 
-type OrderRequestedPayload = {
+export type OrderRequestedPayload = {
 	cpf: string;
 	items: Array<{id: number; quantity: number}>;
 	coupon?: string;

@@ -1,16 +1,16 @@
-import type {QueueGateway} from '../../application/gateway/QueueGateway';
-import type {Checkout, Input as CheckoutInput} from '../../application/usecases/Checkout';
+import type {QueueCallback} from '../../application/gateway/QueueGateway';
+import type {Checkout} from '../../application/usecases/Checkout';
+import type {OrderRequestedPayload} from '../../domain/events/OrderRequested';
+import {QueueController} from './QueueController';
 
-export class CheckoutController {
+export class CheckoutController extends QueueController<OrderRequestedPayload> {
 	constructor(
 		private readonly checkout: Checkout,
 	) {
+		super();
 	}
 
-	public register = async (event: string, queue: string, queueGateway: QueueGateway) => {
-		await queueGateway
-			.on<CheckoutInput>(event, queue, async payload => {
-			await this.checkout.execute(payload);
-		});
+	protected handler: QueueCallback<OrderRequestedPayload> = async payload => {
+		await this.checkout.execute(payload);
 	};
 }

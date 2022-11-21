@@ -7,8 +7,14 @@ type Output = {
 };
 
 export class GetItems {
-	async query(): Promise<Output[]> {
-		const items = await prisma.item.findMany();
+	async query(ids: number[]): Promise<Output[]> {
+		const items = await prisma.item.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+		});
 
 		if (!items) {
 			throw new NotFoundError('Item não encontrado');
@@ -17,6 +23,12 @@ export class GetItems {
 		return items.map(item => ({
 			price: item.price.toNumber(),
 			description: item.description,
+			addressCep: item.addressCep,
+			depth: item.depth.toNumber(),
+			width: item.width.toNumber(),
+			height: item.height.toNumber(),
+			weight: item.weight.toNumber(),
+			id: item.id,
 		}));
 	}
 }

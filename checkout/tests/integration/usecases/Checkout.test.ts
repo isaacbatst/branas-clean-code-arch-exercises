@@ -19,7 +19,7 @@ const makeSut = async () => {
 test('Ao criar pedido deve usar data atual e contagem do banco', async () => {
 	const {checkout} = await makeSut();
 
-	const created = await checkout.execute({cpf: '317.153.361-86', items: [], destination: 'any-destination'});
+	const created = await checkout.execute({cpf: '317.153.361-86', items: [], destination: 'any-destination', count: 0});
 
 	const now = new Date();
 	const year = now.getFullYear();
@@ -35,6 +35,7 @@ test('Ao criar o pedido com um item deve calcular o total', async () => {
 			{id: 1, quantity: 1},
 		],
 		destination: 'any-destination',
+		count: 1,
 	});
 
 	expect(created.total).toBe(1010);
@@ -50,6 +51,7 @@ test('Ao criar o pedido com dois itens deve calcular o total', async () => {
 			{id: 2, quantity: 1},
 		],
 		destination: 'any-destination',
+		count: 1,
 	});
 
 	expect(created.total).toBe(7030);
@@ -69,6 +71,7 @@ test('Ao criar o pedido com cupom de desconto deve calcular o total', async () =
 		],
 		coupon: 'VALE20',
 		destination: 'any-destination',
+		count: 1,
 	});
 
 	expect(created.total).toBe(4816);
@@ -86,6 +89,7 @@ test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
 			],
 			coupon: 'VALE20',
 			destination: 'any-destination',
+			count: 1,
 		});
 	}).rejects.toThrow('Cupom não encontrado');
 });
@@ -99,6 +103,7 @@ test('Ao criar o pedido com um item deve publicar evento', async () => {
 			{id: 1, quantity: 1},
 		],
 		destination: 'any-destination',
+		count: 1,
 	});
 
 	expect(queueGateway.events).toHaveLength(1);

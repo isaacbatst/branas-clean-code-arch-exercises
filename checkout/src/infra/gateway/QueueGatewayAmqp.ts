@@ -26,7 +26,6 @@ export class QueueGatewayAmqp implements QueueGateway {
 		if (!QueueGatewayAmqp.channel) {
 			const connection = await QueueGatewayAmqp.getConnection();
 			QueueGatewayAmqp.channel = await connection.createChannel();
-			await QueueGatewayAmqp.channel.prefetch(1);
 		}
 
 		return QueueGatewayAmqp.channel;

@@ -1,6 +1,7 @@
 export type HttpRequest = {
 	body: Record<string, unknown>;
 	params: Record<string, unknown>;
+	query: Record<string, unknown>;
 };
 
 export type HttpResponse = {

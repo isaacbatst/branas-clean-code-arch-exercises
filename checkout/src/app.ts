@@ -3,12 +3,14 @@ import {GetOrderByCode} from './application/queries/GetOrderByCode';
 import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
 import {CancelOrder} from './application/usecases/CancelOrder';
 import {Checkout} from './application/usecases/Checkout';
+import {CreateOrderProjection} from './application/usecases/CreateOrderProjection';
 import {Preview} from './application/usecases/Preview';
 import {RequestCheckout} from './application/usecases/RequestCheckout';
 import {SimulateShipping} from './application/usecases/SimulateShipping';
 import {ValidateCoupon} from './application/usecases/ValidateCoupon';
 import {CancelOrderController} from './infra/controller/CancelOrderController';
 import {CheckoutController} from './infra/controller/CheckoutController';
+import {CreateOrderProjectionController} from './infra/controller/CreateOrderProjectionController';
 import {GetOrderByCodeController} from './infra/controller/GetOrderByCodeController';
 import {GetOrdersByCpfController} from './infra/controller/GetOrdersByCpfController';
 import {PreviewController} from './infra/controller/PreviewController';
@@ -34,6 +36,7 @@ export class App {
 		const cancelOrder = new CancelOrder(repositoryFactory, gatewayFactory);
 		const preview = new Preview(repositoryFactory, gatewayFactory);
 		const requestCheckout = new RequestCheckout(repositoryFactory, gatewayFactory);
+		const createOrderProjection = new CreateOrderProjection(repositoryFactory, gatewayFactory);
 
 		const checkoutController = new CheckoutController(checkout);
 		const validateCouponController = new ValidateCouponController(validateCoupon);
@@ -43,6 +46,7 @@ export class App {
 		const cancelOrderController = new CancelOrderController(cancelOrder);
 		const previewController = new PreviewController(preview);
 		const requestCheckoutController = new RequestCheckoutController(requestCheckout);
+		const createOrderProjectionController = new CreateOrderProjectionController(createOrderProjection);
 
 		validateCouponController.register('post', '/validate/coupon', this.httpServer);
 		simulateShippingController.register('post', '/simulate/shipping', this.httpServer);
@@ -53,9 +57,7 @@ export class App {
 		requestCheckoutController.register('post', '/checkout', this.httpServer);
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 
-		checkoutController.register('orderRequested', 'orderRequested.checkout', gatewayFactory.queueGateway)
-			.catch(err => {
-				console.error('Error registering queue', err);
-			});
+		checkoutController.register('orderRequested', 'orderRequested.checkout', gatewayFactory.queueGateway);
+		createOrderProjectionController.register('orderPlaced', 'orderPlaced.createProjection', gatewayFactory.queueGateway);
 	}
 }

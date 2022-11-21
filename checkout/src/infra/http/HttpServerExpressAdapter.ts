@@ -46,7 +46,7 @@ export class HttpServerExpressAdapter implements HttpServer {
 
 	listen(port: number): void {
 		this.app.listen(port, () => {
-			console.log('express listening');
+			console.log('express listening', port);
 		});
 	}
 

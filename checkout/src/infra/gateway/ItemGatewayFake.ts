@@ -38,4 +38,8 @@ export class ItemGatewayFake implements ItemGateway {
 
 		return item;
 	}
+
+	async getItems(ids: number[]): Promise<ItemDto[]> {
+		return this.items.filter(item => ids.includes(item.idItem));
+	}
 }

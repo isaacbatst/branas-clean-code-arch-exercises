@@ -11,7 +11,7 @@ import type {CouponRepository} from '../repositories/CouponRepository';
 import type {OrderRepository} from '../repositories/OrderRepository';
 import type {RepositoryFactory} from '../repositories/RepositoryFactory';
 
-export type Input = {
+type Input = {
 	cpf: string;
 	items: Array<{id: number; quantity: number}>;
 	coupon?: string;

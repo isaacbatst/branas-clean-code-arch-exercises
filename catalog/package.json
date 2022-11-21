@@ -7,7 +7,7 @@
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
     "test": "yarn test:unit && yarn test:integration",
-    "test:unit": "jest tests/unit --passWithNoTests",
+    "test:unit": "jest tests/unit",
     "test:integration": "yarn test:integration:usecases && yarn test:integration:api",
     "test:integration:usecases": "jest tests/integration/usecases --passWithNoTests",
     "test:integration:api": "jest tests/integration/api",
