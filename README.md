@@ -20,7 +20,7 @@
 - [X] Separar os bounded contexts em microserviços diferentes
 - [X] Coloque o estoque em um bounded context
 - [] Coloque alteração do estoque em uma operação assíncrona
-- [] Coloque o registro da projeção em uma operação assíncrona
+- [X] Coloque o registro da projeção em uma operação assíncrona
 - [X] Coloque o checkout em uma operação assíncrona
 
 
