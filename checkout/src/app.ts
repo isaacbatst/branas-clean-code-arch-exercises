@@ -52,7 +52,7 @@ export class App {
 		simulateShippingController.register('post', '/simulate/shipping', this.httpServer);
 		getOrderByCodeController.register('get', '/order/:code', this.httpServer);
 		getOrdersByCpfController.register('get', '/orders', this.httpServer);
-		cancelOrderController.register('post', '/order/cancel/:code', this.httpServer);
+		cancelOrderController.register('post', '/order/:code/cancel', this.httpServer);
 		previewController.register('post', '/preview', this.httpServer);
 		requestCheckoutController.register('post', '/checkout', this.httpServer);
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);

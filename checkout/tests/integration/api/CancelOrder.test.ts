@@ -12,12 +12,12 @@ test('POST /order/cancel', async () => {
 	const app = makeSut();
 
 	const firstResponse = await request(app.httpServer.app)
-		.post('/order/cancel/202200000001');
+		.post('/order/202200000001/cancel');
 
 	expect(firstResponse.status).toBe(200);
 
 	const secondResponse = await request(app.httpServer.app)
-		.post('/order/cancel/202200000001');
+		.post('/order/202200000001/cancel');
 
 	expect(secondResponse.status).toBe(409);
 });
