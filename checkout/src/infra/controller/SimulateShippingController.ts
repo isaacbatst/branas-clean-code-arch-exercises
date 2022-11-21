@@ -1,9 +1,9 @@
 import type {SimulateShipping} from '../../application/usecases/SimulateShipping';
 import {ValidationError} from '../../domain/errors/ValidationError';
 import type {HttpRequestHandler} from '../http/HttpServer';
-import {Controller} from './Controller';
+import {HttpController} from './HttpController';
 
-export class SimulateShippingController extends Controller {
+export class SimulateShippingController extends HttpController {
 	constructor(
 		private readonly simulateShipping: SimulateShipping,
 	) {

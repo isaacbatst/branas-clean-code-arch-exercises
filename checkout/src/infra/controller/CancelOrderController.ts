@@ -1,8 +1,8 @@
 import type {CancelOrder} from '../../application/usecases/CancelOrder';
 import type {HttpRequest} from '../http/HttpServer';
-import {Controller} from './Controller';
+import {HttpController} from './HttpController';
 
-export class CancelOrderController extends Controller {
+export class CancelOrderController extends HttpController {
 	constructor(
 		private readonly cancelOrder: CancelOrder,
 	) {

@@ -1,17 +1,21 @@
-import type {Preview} from '../../application/usecases/Preview';
+import type {RequestCheckout} from '../../application/usecases/RequestCheckout';
 import {ValidationError} from '../../domain/errors/ValidationError';
 import type {HttpRequestHandler} from '../http/HttpServer';
 import {HttpController} from './HttpController';
 
-export class PreviewController extends HttpController {
+export class RequestCheckoutController extends HttpController {
 	constructor(
-		private readonly preview: Preview,
+		private readonly requestCheckout: RequestCheckout,
 	) {
 		super();
 	}
 
 	protected handler: HttpRequestHandler = async req => {
-		const {items, coupon, destination} = req.body;
+		const {cpf, items, coupon, destination} = req.body;
+		if (typeof cpf !== 'string') {
+			throw new ValidationError('INVALID_CPF');
+		}
+
 		if (!Array.isArray(items)) {
 			throw new ValidationError('INVALID_ITEMS');
 		}
@@ -24,7 +28,8 @@ export class PreviewController extends HttpController {
 			throw new ValidationError('INVALID_DESTINATION');
 		}
 
-		const {total} = await this.preview.execute({
+		await this.requestCheckout.execute({
+			cpf,
 			destination,
 			items,
 			coupon,
@@ -32,9 +37,6 @@ export class PreviewController extends HttpController {
 
 		return {
 			statusCode: 200,
-			body: {
-				total,
-			},
 		};
 	};
 }

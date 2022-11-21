@@ -1,45 +1,16 @@
-import type {Checkout} from '../../application/usecases/Checkout';
-import {ValidationError} from '../../domain/errors/ValidationError';
-import type {HttpRequest} from '../http/HttpServer';
-import {Controller} from './Controller';
+import type {QueueGateway} from '../../application/gateway/QueueGateway';
+import type {Checkout, Input as CheckoutInput} from '../../application/usecases/Checkout';
 
-export class CheckoutController extends Controller {
+export class CheckoutController {
 	constructor(
 		private readonly checkout: Checkout,
 	) {
-		super();
 	}
 
-	protected handler = async (req: HttpRequest) => {
-		const {cpf, items, coupon, destination} = req.body;
-		if (typeof cpf !== 'string') {
-			throw new ValidationError('INVALID_CPF');
-		}
-
-		if (!Array.isArray(items)) {
-			throw new ValidationError('INVALID_ITEMS');
-		}
-
-		if (typeof coupon !== 'string' && typeof coupon !== 'undefined') {
-			throw new ValidationError('INVALID_COUPON');
-		}
-
-		if (!destination || typeof destination !== 'string') {
-			throw new ValidationError('INVALID_DESTINATION');
-		}
-
-		const {code, total} = await this.checkout.execute({
-			cpf,
-			items,
-			coupon,
-			destination,
+	public register = async (event: string, queue: string, queueGateway: QueueGateway) => {
+		await queueGateway
+			.on<CheckoutInput>(event, queue, async payload => {
+			await this.checkout.execute(payload);
 		});
-
-		return {
-			statusCode: 200,
-			body: {
-				code, total,
-			},
-		};
 	};
 }

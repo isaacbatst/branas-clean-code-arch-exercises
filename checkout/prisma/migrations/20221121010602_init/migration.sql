@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "OrderStatuses" AS ENUM ('waitingPayment', 'canceled');
+CREATE TYPE "OrderStatuses" AS ENUM ('waitingPayment', 'canceled', 'shipped');
 
 -- CreateTable
 CREATE TABLE "Coupon" (
@@ -50,6 +50,16 @@ CREATE TABLE "OrderProjection" (
     "status" "OrderStatuses" NOT NULL,
 
     CONSTRAINT "OrderProjection_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OrderRequest" (
+    "id" SERIAL NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "year" INTEGER NOT NULL,
+    "count" INTEGER NOT NULL,
+
+    CONSTRAINT "OrderRequest_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

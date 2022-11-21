@@ -1,6 +1,6 @@
 import type {HttpMethod, HttpRequestHandler, HttpServer} from '../http/HttpServer';
 
-export abstract class Controller {
+export abstract class HttpController {
 	protected abstract handler: HttpRequestHandler;
 
 	public register(

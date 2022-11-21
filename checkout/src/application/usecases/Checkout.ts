@@ -11,11 +11,12 @@ import type {CouponRepository} from '../repositories/CouponRepository';
 import type {OrderRepository} from '../repositories/OrderRepository';
 import type {RepositoryFactory} from '../repositories/RepositoryFactory';
 
-type Input = {
+export type Input = {
 	cpf: string;
 	items: Array<{id: number; quantity: number}>;
 	coupon?: string;
 	destination: string;
+	count: number;
 };
 
 type Output = {
@@ -41,8 +42,7 @@ export class Checkout {
 	}
 
 	async execute(input: Input): Promise<Output> {
-		const count = await this.orderRepository.getCount();
-		const orderCode = OrderCodeGenerator.generate(new Date(), count);
+		const orderCode = OrderCodeGenerator.generate(new Date(), input.count);
 		const order = new Order(input.cpf, new Date(), orderCode, input.destination, OrderStatuses.waitingPayment);
 
 		const items = await Promise.all(input.items.map(async ({id, quantity}) => {

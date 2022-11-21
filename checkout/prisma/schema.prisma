@@ -22,7 +22,7 @@ model OrderItem {
   id       Int     @id @default(autoincrement())
   itemId   Int
   quantity Int
-  shipping    Decimal @db.Decimal(10, 2)
+  shipping Decimal @db.Decimal(10, 2)
   price    Decimal @db.Decimal(10, 2)
   order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId  Int
@@ -48,13 +48,20 @@ model Order {
 }
 
 model OrderProjection {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   cpf         String
-  code        String   @unique
+  code        String        @unique
   couponCode  String?
-  total       Decimal  @db.Decimal(10, 2)
+  total       Decimal       @db.Decimal(10, 2)
   date        DateTime
   destination String
   orderItems  Json
-  status OrderStatuses
+  status      OrderStatuses
+}
+
+model OrderRequest {
+  id    Int      @id @default(autoincrement())
+  date  DateTime
+  year  Int
+  count Int
 }

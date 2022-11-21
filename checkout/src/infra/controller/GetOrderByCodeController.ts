@@ -1,9 +1,9 @@
 import type {GetOrderByCode} from '../../application/queries/GetOrderByCode';
 import {ValidationError} from '../../domain/errors/ValidationError';
 import type {HttpMethod, HttpRequestHandler, HttpServer} from '../http/HttpServer';
-import {Controller} from './Controller';
+import {HttpController} from './HttpController';
 
-export class GetOrderByCodeController extends Controller {
+export class GetOrderByCodeController extends HttpController {
 	constructor(
 		private readonly getOrderByCode: GetOrderByCode,
 	) {

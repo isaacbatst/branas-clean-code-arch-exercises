@@ -1,9 +1,9 @@
 import type {ValidateCoupon} from '../../application/usecases/ValidateCoupon';
 import {ValidationError} from '../../domain/errors/ValidationError';
 import type {HttpRequestHandler} from '../http/HttpServer';
-import {Controller} from './Controller';
+import {HttpController} from './HttpController';
 
-export class ValidateCouponController extends Controller {
+export class ValidateCouponController extends HttpController {
 	constructor(
 		private readonly validateCoupon: ValidateCoupon,
 	) {
