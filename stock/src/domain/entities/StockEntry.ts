@@ -11,9 +11,10 @@ export class StockEntry {
 	readonly operation: StockEntryOperation;
 
 	constructor(
-		readonly id: number,
+		readonly id: string,
 		readonly idItem: number,
 		readonly quantity: number,
+		readonly createdAt: Date,
 		operation: string,
 	) {
 		if (!StockEntry.validateOperation(operation)) {

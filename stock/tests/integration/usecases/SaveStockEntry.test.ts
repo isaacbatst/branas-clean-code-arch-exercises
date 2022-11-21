@@ -1,9 +1,9 @@
-import {SaveStockEntry} from '../../../src/application/usecases/SaveStockEntry';
+import {DecrementStock} from '../../../src/application/usecases/DecrementStock';
 import {StockEntryRepositoryMemory} from '../../../src/infra/persistence/memory/StockEntryRepositoryMemory';
 
 test('Deve salvar registro válido', async () => {
 	const stockEntryRepository = new StockEntryRepositoryMemory();
-	const saveStockEntry = new SaveStockEntry(stockEntryRepository);
+	const saveStockEntry = new DecrementStock(stockEntryRepository);
 
 	const {id} = await saveStockEntry.execute(1, 10, 'increment');
 
@@ -12,7 +12,7 @@ test('Deve salvar registro válido', async () => {
 
 test('Não deve salvar registro com operação inválida', async () => {
 	const stockEntryRepository = new StockEntryRepositoryMemory();
-	const saveStockEntry = new SaveStockEntry(stockEntryRepository);
+	const saveStockEntry = new DecrementStock(stockEntryRepository);
 
 	await expect(async () => {
 		await saveStockEntry.execute(1, 10, 'invalid-operation');

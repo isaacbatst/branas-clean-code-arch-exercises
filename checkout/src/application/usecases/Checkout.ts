@@ -78,7 +78,10 @@ export class Checkout {
 		}
 
 		await this.orderRepository.save(order);
-		await this.queueGateway.publish(new OrderPlaced(order));
+		await this.queueGateway.publish(new OrderPlaced({
+			code: order.code,
+			orderItems: order.orderItems,
+		}));
 
 		return {
 			code: order.code,

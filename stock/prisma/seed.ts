@@ -1,6 +1,8 @@
+import {seedStockEntries} from './seeds/StockEntry';
 
 const seed = async () => {
 	console.log('Starting seed...');
+	await seedStockEntries();
 };
 
 seed()

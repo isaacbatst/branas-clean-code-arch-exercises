@@ -8,7 +8,11 @@ export class StockEntryRepositoryMemory implements StockEntryRepository {
 		this.stockEntries.push(stockEntry);
 	}
 
-	async count(): Promise<number> {
-		return this.stockEntries.length;
+	async saveAll(stockEntries: StockEntry[]): Promise<void> {
+		this.stockEntries.push(...stockEntries);
+	}
+
+	async nextId(): Promise<string> {
+		return String(this.stockEntries.length + 1);
 	}
 }

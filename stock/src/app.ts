@@ -1,5 +1,6 @@
-import {SaveStockEntry} from './application/usecases/SaveStockEntry';
-import {SaveStockEntryController} from './infra/controller/SaveStockEntryController';
+import type {QueueGateway} from './application/gateway/QueueGateway';
+import {DecrementStock} from './application/usecases/DecrementStock';
+import {DecrementStockController} from './infra/controller/SaveStockEntryController';
 import {HttpServerExpressAdapter} from './infra/http/HttpServerExpressAdapter';
 import {ErrorMiddleware} from './infra/middleware/ErrorMiddleware';
 import {StockEntryRepositoryPrisma} from './infra/persistence/prisma/StockEntryRepositoryPrisma';
@@ -7,12 +8,14 @@ import {StockEntryRepositoryPrisma} from './infra/persistence/prisma/StockEntryR
 export class App {
 	readonly httpServer = new HttpServerExpressAdapter();
 
-	constructor() {
+	constructor(
+		queueGateway: QueueGateway,
+	) {
 		const stockEntryRepository = new StockEntryRepositoryPrisma();
-		const saveStockEntry = new SaveStockEntry(stockEntryRepository);
-		const saveStockEntryController = new SaveStockEntryController(saveStockEntry);
+		const decrementStock = new DecrementStock(stockEntryRepository);
+		const decrementStockController = new DecrementStockController(decrementStock);
 
-		saveStockEntryController.register('post', '/stock-entry', this.httpServer);
+		decrementStockController.register('orderPlaced', 'orderPlaced.decrementStock', queueGateway);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 	}

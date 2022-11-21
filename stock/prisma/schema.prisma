@@ -16,8 +16,9 @@ enum StockEntryOperations {
 }
 
 model StockEntry {
-  id        Int                  @id @default(autoincrement())
+  id        String               @id @default(uuid()) @db.Uuid
   quantity  Int
   operation StockEntryOperations
   idItem    Int
+  createdAt DateTime @default(now())
 }
