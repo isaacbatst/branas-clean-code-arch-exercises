@@ -21,7 +21,7 @@ export class App {
 		const decrementStockController = new DecrementStockController(decrementStock);
 		const incrementStockController = new IncrementStockController(incrementStock);
 
-		decrementStockController.register('orderPlaced', 'orderPlaced.decrementStock', queueGateway);
+		decrementStockController.register('orderProcessed', 'orderProcessed.decrementStock', queueGateway);
 		incrementStockController.register('orderCanceled', 'orderCanceled.incrementStock', queueGateway);
 
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);

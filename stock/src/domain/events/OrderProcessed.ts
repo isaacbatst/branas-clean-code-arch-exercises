@@ -1,6 +1,6 @@
 import {DomainEvent} from './DomainEvent';
 
-export type OrderPlacedPayload = {
+export type OrderProcessedPayload = {
 	code: string;
 	orderItems: Array<{
 		idItem: number;
@@ -8,8 +8,8 @@ export type OrderPlacedPayload = {
 	}>;
 };
 
-export class OrderPlaced extends DomainEvent<OrderPlacedPayload> {
+export class OrderProcessed extends DomainEvent<OrderProcessedPayload> {
 	get name() {
-		return 'orderPlaced';
+		return 'orderProcessed';
 	}
 }
