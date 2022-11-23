@@ -3,14 +3,14 @@ import {GetOrderByCode} from './application/queries/GetOrderByCode';
 import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
 import type {RepositoryFactory} from './application/repositories/RepositoryFactory';
 import {CancelOrder} from './application/usecases/CancelOrder';
-import {Checkout} from './application/usecases/Checkout';
+import {ProcessOrder} from './application/usecases/ProcessOrder';
 import {CreateOrderProjection} from './application/usecases/CreateOrderProjection';
 import {Preview} from './application/usecases/Preview';
 import {RequestCheckout} from './application/usecases/RequestCheckout';
 import {SimulateShipping} from './application/usecases/SimulateShipping';
 import {ValidateCoupon} from './application/usecases/ValidateCoupon';
 import {CancelOrderController} from './infra/controller/CancelOrderController';
-import {CheckoutController} from './infra/controller/CheckoutController';
+import {CheckoutController} from './infra/controller/ProcessOrderController';
 import {CreateOrderProjectionController} from './infra/controller/CreateOrderProjectionController';
 import {GetOrderByCodeController} from './infra/controller/GetOrderByCodeController';
 import {GetOrdersByCpfController} from './infra/controller/GetOrdersByCpfController';
@@ -32,7 +32,7 @@ export class App {
 	}
 
 	async init() {
-		const checkout = new Checkout(this.repositoryFactory, this.gatewayFactory);
+		const processOrder = new ProcessOrder(this.repositoryFactory, this.gatewayFactory);
 		const validateCoupon = new ValidateCoupon(this.repositoryFactory);
 		const simulateShipping = new SimulateShipping(this.gatewayFactory);
 		const getOrderByCode = new GetOrderByCode();
@@ -42,7 +42,7 @@ export class App {
 		const requestCheckout = new RequestCheckout(this.repositoryFactory, this.gatewayFactory);
 		const createOrderProjection = new CreateOrderProjection(this.repositoryFactory, this.gatewayFactory);
 
-		const checkoutController = new CheckoutController(checkout);
+		const processOrderController = new CheckoutController(processOrder);
 		const validateCouponController = new ValidateCouponController(validateCoupon);
 		const simulateShippingController = new SimulateShippingController(simulateShipping);
 		const getOrderByCodeController = new GetOrderByCodeController(getOrderByCode);
@@ -61,7 +61,7 @@ export class App {
 		requestCheckoutController.register('post', '/checkout', this.httpServer);
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 
-		await checkoutController.register('orderRequested', 'orderRequested.checkout', this.gatewayFactory.queueGateway);
+		await processOrderController.register('orderRequested', 'orderRequested.processOrder', this.gatewayFactory.queueGateway);
 		await createOrderProjectionController.register('orderProcessed', 'orderProcessed.createProjection', this.gatewayFactory.queueGateway);
 	}
 }

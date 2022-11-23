@@ -20,7 +20,7 @@ type Input = {
 	orderCode: string;
 };
 
-export class Checkout {
+export class ProcessOrder {
 	private readonly orderRepository: OrderRepository;
 	private readonly couponRepository: CouponRepository;
 	private readonly itemGateway: ItemGateway;

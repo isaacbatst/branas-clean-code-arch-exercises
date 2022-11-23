@@ -1,26 +1,25 @@
-import {Checkout} from '../../../src/application/usecases/Checkout';
+import {ProcessOrder} from '../../../src/application/usecases/ProcessOrder';
 import Coupon from '../../../src/domain/entities/Coupon';
-import {OrderProcessingFailed} from '../../../src/domain/events/OrderProcessingFailed';
 import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 import {RepositoryFactoryMemory} from '../../../src/infra/persistence/memory/RepositoryFactoryMemory';
 
 const makeSut = async () => {
 	const repositoryFactory = new RepositoryFactoryMemory();
 	const gatewayFactory = new GatewayFactoryFake();
-	const checkout = new Checkout(repositoryFactory, gatewayFactory);
+	const processOrder = new ProcessOrder(repositoryFactory, gatewayFactory);
 
 	return {
 		orderRepository: repositoryFactory.orderRepository,
 		couponRepository: repositoryFactory.couponRepository,
 		queueGateway: gatewayFactory.queueGateway,
-		checkout,
+		processOrder,
 	};
 };
 
 test('Ao criar o pedido com um item deve calcular o total', async () => {
-	const {checkout, orderRepository} = await makeSut();
+	const {processOrder, orderRepository} = await makeSut();
 
-	await checkout.execute({
+	await processOrder.execute({
 		cpf: '317.153.361-86',
 		items: [
 			{id: 1, quantity: 1},
@@ -35,9 +34,9 @@ test('Ao criar o pedido com um item deve calcular o total', async () => {
 });
 
 test('Ao criar o pedido com dois itens deve calcular o total', async () => {
-	const {checkout, orderRepository} = await makeSut();
+	const {processOrder, orderRepository} = await makeSut();
 
-	await checkout.execute({
+	await processOrder.execute({
 		cpf: '317.153.361-86',
 		items: [
 			{id: 1, quantity: 2},
@@ -53,12 +52,12 @@ test('Ao criar o pedido com dois itens deve calcular o total', async () => {
 });
 
 test('Ao criar o pedido com cupom de desconto deve calcular o total', async () => {
-	const {checkout, couponRepository, orderRepository} = await makeSut();
+	const {processOrder, couponRepository, orderRepository} = await makeSut();
 	const tomorrow = new Date();
 	tomorrow.setDate(tomorrow.getDate() + 1);
 	await couponRepository.save(new Coupon('VALE20', 20, tomorrow));
 
-	await checkout.execute({
+	await processOrder.execute({
 		cpf: '317.153.361-86',
 		items: [
 			{id: 1, quantity: 1},
@@ -75,12 +74,12 @@ test('Ao criar o pedido com cupom de desconto deve calcular o total', async () =
 });
 
 test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
-	const {checkout, queueGateway} = await makeSut();
+	const {processOrder, queueGateway} = await makeSut();
 	const spy = jest.fn();
 
 	await queueGateway.on('orderProcessingFailed', 'orderProcessingFailed.test', spy);
 
-	await checkout.execute({
+	await processOrder.execute({
 		cpf: '317.153.361-86',
 		items: [
 			{id: 1, quantity: 1},
@@ -98,13 +97,13 @@ test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
 });
 
 test('Ao criar o pedido com um item deve publicar evento', async () => {
-	const {checkout, queueGateway} = await makeSut();
+	const {processOrder, queueGateway} = await makeSut();
 
 	const spy = jest.fn();
 
 	await queueGateway.on('orderProcessed', 'orderProcessed.test', spy);
 
-	await checkout.execute({
+	await processOrder.execute({
 		cpf: '317.153.361-86',
 		items: [
 			{id: 1, quantity: 1},
