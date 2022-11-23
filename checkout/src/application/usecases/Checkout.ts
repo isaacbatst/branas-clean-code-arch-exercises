@@ -1,8 +1,9 @@
 import Order from '../../domain/entities/Order';
-import {OrderCodeGenerator} from '../../domain/entities/OrderCodeGenerator';
 import {OrderStatuses} from '../../domain/entities/OrderStatus';
+import {AppError} from '../../domain/errors/AppError';
 import {GatewayError} from '../../domain/errors/GatewayError';
-import {OrderPlaced} from '../../domain/events/OrderPlaced';
+import {OrderProcessed} from '../../domain/events/OrderProcessed';
+import {OrderProcessingFailed} from '../../domain/events/OrderProcessingFailed';
 import type {GatewayFactory} from '../gateway/GatewayFactory';
 import type {ItemGateway} from '../gateway/ItemGateway';
 import type {QueueGateway} from '../gateway/QueueGateway';
@@ -16,12 +17,7 @@ type Input = {
 	items: Array<{id: number; quantity: number}>;
 	coupon?: string;
 	destination: string;
-	count: number;
-};
-
-type Output = {
-	code: string;
-	total: number;
+	orderCode: string;
 };
 
 export class Checkout {
@@ -41,51 +37,55 @@ export class Checkout {
 		this.queueGateway = gatewayFactory.queueGateway;
 	}
 
-	async execute(input: Input): Promise<Output> {
-		const orderCode = OrderCodeGenerator.generate(new Date(), input.count);
-		const order = new Order(input.cpf, new Date(), orderCode, input.destination, OrderStatuses.waitingPayment);
+	async execute(input: Input): Promise<void> {
+		try {
+			const order = new Order(input.cpf, new Date(), input.orderCode, input.destination, OrderStatuses.waitingPayment);
+			const items = await Promise.all(input.items.map(async ({id, quantity}) => {
+				const item = await this.itemGateway.getById(id);
+				return {
+					item,
+					quantity,
+				};
+			}));
 
-		const items = await Promise.all(input.items.map(async ({id, quantity}) => {
-			const item = await this.itemGateway.getById(id);
-			return {
-				item,
-				quantity,
-			};
-		}));
+			const shippings = await this.shippingGateway.calculateShipping({
+				destination: input.destination,
+				orderItems: items,
+			});
 
-		const shippings = await this.shippingGateway.calculateShipping({
-			destination: input.destination,
-			orderItems: items,
-		});
+			items.forEach(({item, quantity}) => {
+				const shippingItem = shippings.find(shippingItem => shippingItem.id === item.idItem);
+				if (!shippingItem) {
+					throw new GatewayError('Frete de item não calculado');
+				}
 
-		items.forEach(({item, quantity}) => {
-			const shippingItem = shippings.find(shippingItem => shippingItem.id === item.idItem);
-			if (!shippingItem) {
-				throw new GatewayError('Frete de item não calculado');
+				order.addItem({
+					idItem: item.idItem,
+					price: item.price,
+					quantity,
+					shipping: shippingItem.shipping,
+				});
+			});
+
+			if (input.coupon) {
+				const coupon = await this.couponRepository.getByCode(input.coupon);
+				order.addCoupon(coupon);
 			}
 
-			order.addItem({
-				idItem: item.idItem,
-				price: item.price,
-				quantity,
-				shipping: shippingItem.shipping,
-			});
-		});
+			await this.orderRepository.save(order);
+			await this.queueGateway.publish(new OrderProcessed({
+				code: order.code,
+				orderItems: order.orderItems,
+			}));
+		} catch (err: unknown) {
+			const cause = err instanceof AppError && !(err instanceof GatewayError)
+				? err.message
+				: 'Sistema indisponível';
 
-		if (input.coupon) {
-			const coupon = await this.couponRepository.getByCode(input.coupon);
-			order.addCoupon(coupon);
+			await this.queueGateway.publish(new OrderProcessingFailed({
+				code: input.orderCode,
+				cause,
+			}));
 		}
-
-		await this.orderRepository.save(order);
-		await this.queueGateway.publish(new OrderPlaced({
-			code: order.code,
-			orderItems: order.orderItems,
-		}));
-
-		return {
-			code: order.code,
-			total: order.getTotal(),
-		};
 	}
 }

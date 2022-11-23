@@ -5,7 +5,7 @@ export type OrderRequestedPayload = {
 	items: Array<{id: number; quantity: number}>;
 	coupon?: string;
 	destination: string;
-	count: number;
+	orderCode: string;
 };
 
 export class OrderRequested extends DomainEvent<OrderRequestedPayload> {

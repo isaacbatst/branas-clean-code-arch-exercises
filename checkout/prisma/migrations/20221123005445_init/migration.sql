@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "OrderStatuses" AS ENUM ('waitingPayment', 'canceled', 'shipped');
 
+-- CreateEnum
+CREATE TYPE "OrderRequestStatuses" AS ENUM ('waitingToProcess', 'processed', 'failed');
+
 -- CreateTable
 CREATE TABLE "Coupon" (
     "id" SERIAL NOT NULL,
@@ -56,8 +59,8 @@ CREATE TABLE "OrderProjection" (
 CREATE TABLE "OrderRequest" (
     "id" SERIAL NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
-    "year" INTEGER NOT NULL,
-    "count" INTEGER NOT NULL,
+    "code" TEXT NOT NULL,
+    "status" "OrderRequestStatuses" NOT NULL,
 
     CONSTRAINT "OrderRequest_pkey" PRIMARY KEY ("id")
 );
@@ -70,6 +73,9 @@ CREATE UNIQUE INDEX "Order_code_key" ON "Order"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "OrderProjection_code_key" ON "OrderProjection"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "OrderRequest_code_key" ON "OrderRequest"("code");
 
 -- AddForeignKey
 ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;

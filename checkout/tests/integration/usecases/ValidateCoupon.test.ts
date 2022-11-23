@@ -3,7 +3,7 @@ import Coupon from '../../../src/domain/entities/Coupon';
 import {CouponRepositoryMemory} from '../../../src/infra/persistence/memory/CouponRepositoryMemory';
 import {RepositoryFactoryMemory} from '../../../src/infra/persistence/memory/RepositoryFactoryMemory';
 
-const makeSut = () => {
+const makeSut = async () => {
 	const repositoryFactory = new RepositoryFactoryMemory();
 	const validateCoupon = new ValidateCoupon(repositoryFactory);
 
@@ -14,7 +14,7 @@ const makeSut = () => {
 };
 
 test('Deve validar o cupom', async () => {
-	const {couponRepository, validateCoupon} = makeSut();
+	const {couponRepository, validateCoupon} = await makeSut();
 	const tomorrow = new Date();
 	tomorrow.setDate(tomorrow.getDate() + 1);
 	await couponRepository.save(new Coupon('VALE20', 20, tomorrow));
@@ -23,7 +23,7 @@ test('Deve validar o cupom', async () => {
 });
 
 test('Deve retornar cupom expirado', async () => {
-	const {couponRepository, validateCoupon} = makeSut();
+	const {couponRepository, validateCoupon} = await makeSut();
 	const yesterday = new Date();
 	yesterday.setDate(yesterday.getDate() - 1);
 	await couponRepository.save(new Coupon('VALE20', 20, yesterday));
@@ -33,7 +33,7 @@ test('Deve retornar cupom expirado', async () => {
 });
 
 test('Deve retornar cupom não encontrado', async () => {
-	const {couponRepository, validateCoupon} = makeSut();
+	const {couponRepository, validateCoupon} = await makeSut();
 	await couponRepository.save(new Coupon('VALE30', 20, new Date()));
 
 	await expect(async () => {

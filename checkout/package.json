@@ -11,8 +11,11 @@
     "test:integration": "yarn test:integration:usecases && yarn test:integration:api",
     "test:integration:usecases": "jest tests/integration/usecases",
     "test:integration:api": "jest tests/integration/api",
+    "test:integration:queue": "jest tests/integration/queue",
+    "pretest:integration:queue": "yarn db:reset",
     "pretest:integration:api": "yarn db:reset",
     "posttest:integration:api": "yarn db:reset",
+    "posttest:integration:queue": "yarn db:reset",
     "db:reset": "yarn prisma migrate reset --force"
   },
   "prisma": {

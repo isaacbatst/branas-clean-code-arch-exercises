@@ -1,5 +1,6 @@
 import {Checkout} from '../../../src/application/usecases/Checkout';
 import Coupon from '../../../src/domain/entities/Coupon';
+import {OrderProcessingFailed} from '../../../src/domain/events/OrderProcessingFailed';
 import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 import {RepositoryFactoryMemory} from '../../../src/infra/persistence/memory/RepositoryFactoryMemory';
 
@@ -16,86 +17,8 @@ const makeSut = async () => {
 	};
 };
 
-test('Ao criar pedido deve usar data atual e contagem do banco', async () => {
-	const {checkout} = await makeSut();
-
-	const created = await checkout.execute({cpf: '317.153.361-86', items: [], destination: 'any-destination', count: 0});
-
-	const now = new Date();
-	const year = now.getFullYear();
-	expect(created.code).toBe(`${year}00000001`);
-});
-
 test('Ao criar o pedido com um item deve calcular o total', async () => {
-	const {checkout} = await makeSut();
-
-	const created = await checkout.execute({
-		cpf: '317.153.361-86',
-		items: [
-			{id: 1, quantity: 1},
-		],
-		destination: 'any-destination',
-		count: 1,
-	});
-
-	expect(created.total).toBe(1010);
-});
-
-test('Ao criar o pedido com dois itens deve calcular o total', async () => {
-	const {checkout} = await makeSut();
-
-	const created = await checkout.execute({
-		cpf: '317.153.361-86',
-		items: [
-			{id: 1, quantity: 2},
-			{id: 2, quantity: 1},
-		],
-		destination: 'any-destination',
-		count: 1,
-	});
-
-	expect(created.total).toBe(7030);
-});
-
-test('Ao criar o pedido com cupom de desconto deve calcular o total', async () => {
-	const {checkout, couponRepository} = await makeSut();
-	const tomorrow = new Date();
-	tomorrow.setDate(tomorrow.getDate() + 1);
-	await couponRepository.save(new Coupon('VALE20', 20, tomorrow));
-
-	const created = await checkout.execute({
-		cpf: '317.153.361-86',
-		items: [
-			{id: 1, quantity: 1},
-			{id: 2, quantity: 1},
-		],
-		coupon: 'VALE20',
-		destination: 'any-destination',
-		count: 1,
-	});
-
-	expect(created.total).toBe(4816);
-});
-
-test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
-	const {checkout} = await makeSut();
-
-	await expect(async () => {
-		await checkout.execute({
-			cpf: '317.153.361-86',
-			items: [
-				{id: 1, quantity: 1},
-				{id: 2, quantity: 1},
-			],
-			coupon: 'VALE20',
-			destination: 'any-destination',
-			count: 1,
-		});
-	}).rejects.toThrow('Cupom não encontrado');
-});
-
-test('Ao criar o pedido com um item deve publicar evento', async () => {
-	const {checkout, queueGateway} = await makeSut();
+	const {checkout, orderRepository} = await makeSut();
 
 	await checkout.execute({
 		cpf: '317.153.361-86',
@@ -103,8 +26,92 @@ test('Ao criar o pedido com um item deve publicar evento', async () => {
 			{id: 1, quantity: 1},
 		],
 		destination: 'any-destination',
-		count: 1,
+		orderCode: '202200000001',
 	});
 
-	expect(queueGateway.events).toHaveLength(1);
+	const order = await orderRepository.getByCode('202200000001');
+
+	expect(order).toBeDefined();
+});
+
+test('Ao criar o pedido com dois itens deve calcular o total', async () => {
+	const {checkout, orderRepository} = await makeSut();
+
+	await checkout.execute({
+		cpf: '317.153.361-86',
+		items: [
+			{id: 1, quantity: 2},
+			{id: 2, quantity: 1},
+		],
+		destination: 'any-destination',
+		orderCode: '202200000001',
+	});
+
+	const order = await orderRepository.getByCode('202200000001');
+
+	expect(order.getTotal()).toBe(7030);
+});
+
+test('Ao criar o pedido com cupom de desconto deve calcular o total', async () => {
+	const {checkout, couponRepository, orderRepository} = await makeSut();
+	const tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	await couponRepository.save(new Coupon('VALE20', 20, tomorrow));
+
+	await checkout.execute({
+		cpf: '317.153.361-86',
+		items: [
+			{id: 1, quantity: 1},
+			{id: 2, quantity: 1},
+		],
+		coupon: 'VALE20',
+		destination: 'any-destination',
+		orderCode: '202200000001',
+	});
+
+	const order = await orderRepository.getByCode('202200000001');
+
+	expect(order.getTotal()).toBe(4816);
+});
+
+test('Ao criar pedido com cupom inexistente deve lançar erro', async () => {
+	const {checkout, queueGateway} = await makeSut();
+	const spy = jest.fn();
+
+	await queueGateway.on('orderProcessingFailed', 'orderProcessingFailed.test', spy);
+
+	await checkout.execute({
+		cpf: '317.153.361-86',
+		items: [
+			{id: 1, quantity: 1},
+			{id: 2, quantity: 1},
+		],
+		coupon: 'VALE20',
+		destination: 'any-destination',
+		orderCode: '202200000001',
+	});
+
+	expect(spy).toHaveBeenCalledWith({
+		code: '202200000001',
+		cause: 'Cupom não encontrado',
+	});
+});
+
+test('Ao criar o pedido com um item deve publicar evento', async () => {
+	const {checkout, queueGateway} = await makeSut();
+
+	const spy = jest.fn();
+
+	await queueGateway.on('orderProcessed', 'orderProcessed.test', spy);
+
+	await checkout.execute({
+		cpf: '317.153.361-86',
+		items: [
+			{id: 1, quantity: 1},
+		],
+		destination: 'any-destination',
+		orderCode: '202200000001',
+	});
+
+	expect(spy).toHaveBeenCalledWith({code: '202200000001', orderItems: [{idItem: 1, price: 1000, quantity: 1, shipping: 10}]});
 });

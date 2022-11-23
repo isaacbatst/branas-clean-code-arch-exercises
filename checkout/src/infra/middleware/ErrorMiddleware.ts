@@ -7,6 +7,7 @@ export class ErrorMiddleware {
 		validationError: 400,
 		gatewayError: 502,
 		conflictError: 409,
+		expiredError: 410,
 	};
 
 	static handle(error: unknown) {

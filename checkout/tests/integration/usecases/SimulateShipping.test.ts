@@ -25,14 +25,14 @@ const amp = {
 	addressCep: 'any-address',
 };
 
-const makeSut = () => {
+const makeSut = async () => {
 	const gatewayFactory = new GatewayFactoryFake();
 	const simulateShipping = new SimulateShipping(gatewayFactory);
 	return {simulateShipping};
 };
 
 test('Ao simular o frete deve retornar valor', async () => {
-	const {simulateShipping} = makeSut();
+	const {simulateShipping} = await makeSut();
 
 	const shippingPrice = await simulateShipping.execute({
 		orderItems: [
@@ -46,7 +46,7 @@ test('Ao simular o frete deve retornar valor', async () => {
 });
 
 test('Ao simular frete com produto não existente deve lançar erro', async () => {
-	const {simulateShipping} = makeSut();
+	const {simulateShipping} = await makeSut();
 
 	await expect(async () => {
 		await simulateShipping.execute({

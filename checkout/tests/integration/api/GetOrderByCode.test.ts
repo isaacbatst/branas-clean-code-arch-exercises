@@ -2,14 +2,15 @@ import request from 'supertest';
 import {App} from '../../../src/app';
 import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 
-const makeSut = () => {
+const makeSut = async () => {
 	const gatewayFactory = new GatewayFactoryFake();
 	const app = new App(gatewayFactory);
+	await app.init();
 	return app;
 };
 
 test('GET /order/:code com pedido existente', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).get('/order/202200000001');
 
@@ -19,7 +20,7 @@ test('GET /order/:code com pedido existente', async () => {
 });
 
 test('GET /order/:code com pedido inexistente', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).get('/order/200000010000');
 

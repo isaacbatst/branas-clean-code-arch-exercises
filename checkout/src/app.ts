@@ -1,6 +1,7 @@
 import type {GatewayFactory} from './application/gateway/GatewayFactory';
 import {GetOrderByCode} from './application/queries/GetOrderByCode';
 import {GetOrdersByCpf} from './application/queries/GetOrdersByCpf';
+import type {RepositoryFactory} from './application/repositories/RepositoryFactory';
 import {CancelOrder} from './application/usecases/CancelOrder';
 import {Checkout} from './application/usecases/Checkout';
 import {CreateOrderProjection} from './application/usecases/CreateOrderProjection';
@@ -23,20 +24,23 @@ import {RepositoryFactoryPrisma} from './infra/persistence/prisma/RepositoryFact
 
 export class App {
 	readonly httpServer = new HttpServerExpressAdapter();
+	readonly repositoryFactory = new RepositoryFactoryPrisma();
 
 	constructor(
-		gatewayFactory: GatewayFactory,
+		readonly gatewayFactory: GatewayFactory,
 	) {
-		const repositoryFactory = new RepositoryFactoryPrisma();
-		const checkout = new Checkout(repositoryFactory, gatewayFactory);
-		const validateCoupon = new ValidateCoupon(repositoryFactory);
-		const simulateShipping = new SimulateShipping(gatewayFactory);
+	}
+
+	async init() {
+		const checkout = new Checkout(this.repositoryFactory, this.gatewayFactory);
+		const validateCoupon = new ValidateCoupon(this.repositoryFactory);
+		const simulateShipping = new SimulateShipping(this.gatewayFactory);
 		const getOrderByCode = new GetOrderByCode();
 		const getOrdersByCpf = new GetOrdersByCpf();
-		const cancelOrder = new CancelOrder(repositoryFactory, gatewayFactory);
-		const preview = new Preview(repositoryFactory, gatewayFactory);
-		const requestCheckout = new RequestCheckout(repositoryFactory, gatewayFactory);
-		const createOrderProjection = new CreateOrderProjection(repositoryFactory, gatewayFactory);
+		const cancelOrder = new CancelOrder(this.repositoryFactory, this.gatewayFactory);
+		const preview = new Preview(this.repositoryFactory, this.gatewayFactory);
+		const requestCheckout = new RequestCheckout(this.repositoryFactory, this.gatewayFactory);
+		const createOrderProjection = new CreateOrderProjection(this.repositoryFactory, this.gatewayFactory);
 
 		const checkoutController = new CheckoutController(checkout);
 		const validateCouponController = new ValidateCouponController(validateCoupon);
@@ -57,7 +61,7 @@ export class App {
 		requestCheckoutController.register('post', '/checkout', this.httpServer);
 		this.httpServer.useErrorMiddleware(ErrorMiddleware.handle);
 
-		checkoutController.register('orderRequested', 'orderRequested.checkout', gatewayFactory.queueGateway);
-		createOrderProjectionController.register('orderPlaced', 'orderPlaced.createProjection', gatewayFactory.queueGateway);
+		await checkoutController.register('orderRequested', 'orderRequested.checkout', this.gatewayFactory.queueGateway);
+		await createOrderProjectionController.register('orderProcessed', 'orderProcessed.createProjection', this.gatewayFactory.queueGateway);
 	}
 }

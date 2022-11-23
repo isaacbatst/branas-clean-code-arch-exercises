@@ -1,4 +1,4 @@
-import {OrderStatuses} from '@prisma/client';
+import {OrderRequestStatuses, OrderStatuses} from '@prisma/client';
 import prisma from '../../src/infra/persistence/prisma/prisma';
 
 export const seedOrders = async () => {
@@ -6,7 +6,7 @@ export const seedOrders = async () => {
 		code: '202200000001',
 		cpf: '317.153.361-86',
 		destination: '71692-404',
-		date: new Date(),
+		date: new Date('2022-01-01'),
 		total: 7070.38,
 		status: OrderStatuses.waitingPayment,
 		orderItems: [
@@ -31,9 +31,9 @@ export const seedOrders = async () => {
 
 	await prisma.orderRequest.create({
 		data: {
-			count: 1,
-			date: new Date('2022-01-01'),
-			year: 2022,
+			code: orderData.code,
+			status: OrderRequestStatuses.waitingToProcess,
+			date: orderData.date,
 		},
 	});
 
@@ -58,9 +58,6 @@ export const seedOrders = async () => {
 	console.log('Seeding order projections...');
 
 	await prisma.orderProjection.create({
-		data: {
-			...orderData,
-			orderItems: orderData.orderItems,
-		},
+		data: orderData,
 	});
 };

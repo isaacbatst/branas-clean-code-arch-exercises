@@ -2,18 +2,24 @@ import type {QueueCallback, QueueGateway} from '../../application/gateway/QueueG
 import type {DomainEvent} from '../../domain/events/DomainEvent';
 
 export class QueueGatewayFake implements QueueGateway {
-	readonly events: Array<DomainEvent<any>> = [];
-	readonly listeners: Array<QueueCallback<any>> = [];
+	readonly listeners: Record<string, Array<QueueCallback<any>>> = {};
 
 	async publish<T>(event: DomainEvent<T>): Promise<void> {
-		this.events.push(event);
-	}
+		if (!this.listeners[event.name]) {
+			this.listeners[event.name] = [];
+		}
 
-	async connect(): Promise<void> {
-		console.log('Fake queue connection');
+		const listeners = Object.values(this.listeners[event.name]);
+
+		await Promise.all(listeners.map(async listener => listener(event.payload)));
 	}
 
 	async on<T>(event: string, queue: string, callback: QueueCallback<T>): Promise<void> {
-		this.listeners.push(callback);
+		if (!this.listeners[event]) {
+			this.listeners[event] = [callback];
+			return;
+		}
+
+		this.listeners[event].push(callback);
 	}
 }

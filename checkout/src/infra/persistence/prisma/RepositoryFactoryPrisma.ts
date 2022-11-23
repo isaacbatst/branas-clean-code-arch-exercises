@@ -2,11 +2,11 @@ import type {CouponRepository} from '../../../application/repositories/CouponRep
 import type {OrderProjectionRepository} from '../../../application/repositories/OrderProjectionRepository';
 import type {OrderRepository} from '../../../application/repositories/OrderRepository';
 import type {RepositoryFactory} from '../../../application/repositories/RepositoryFactory';
-import type {OrderRequestRepository} from '../../../application/repositories/RequestedOrderRepository';
+import type {OrderRequestRepository} from '../../../application/repositories/OrderRequestRepository';
 import {CouponRepositoryPrisma} from './CouponRepositoryPrisma';
 import {OrderProjectionRepositoryPrisma} from './OrderProjectionRepositoryPrisma';
 import {OrderRepositoryPrisma} from './OrderRepositoryPrisma';
-import {OrderRequestRepositoryPrisma} from './RequestedOrderRepositoryPrisma';
+import {OrderRequestRepositoryPrisma} from './OrderRequestRepositoryPrisma';
 
 export class RepositoryFactoryPrisma implements RepositoryFactory {
 	readonly couponRepository: CouponRepository;

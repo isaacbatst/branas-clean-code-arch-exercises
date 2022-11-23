@@ -4,7 +4,7 @@ import {OrderStatuses} from '../../../src/domain/entities/OrderStatus';
 import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 import {RepositoryFactoryMemory} from '../../../src/infra/persistence/memory/RepositoryFactoryMemory';
 
-const makeSut = () => {
+const makeSut = async () => {
 	const repositoryFactory = new RepositoryFactoryMemory();
 	const gatewayFactory = new GatewayFactoryFake();
 	const cancelOrder = new CancelOrder(repositoryFactory, gatewayFactory);
@@ -17,7 +17,7 @@ const makeSut = () => {
 };
 
 test('Ao cancelar o pedido deve persistir informação', async () => {
-	const {cancelOrder, orderRepository} = makeSut();
+	const {cancelOrder, orderRepository} = await makeSut();
 	const now = new Date();
 	const order = new Order('317.153.361-86', now, 'any-code', 'any-destination', OrderStatuses.waitingPayment);
 	await orderRepository.save(order);
@@ -30,7 +30,7 @@ test('Ao cancelar o pedido deve persistir informação', async () => {
 });
 
 test('Ao cancelar o pedido já cancelado, deve retornar erro', async () => {
-	const {cancelOrder, orderRepository} = makeSut();
+	const {cancelOrder, orderRepository} = await makeSut();
 	const now = new Date();
 	const order = new Order('317.153.361-86', now, 'any-code', 'any-destination', OrderStatuses.canceled);
 	await orderRepository.save(order);
@@ -41,7 +41,7 @@ test('Ao cancelar o pedido já cancelado, deve retornar erro', async () => {
 });
 
 test('Ao cancelar o pedido já enviado, deve retornar erro', async () => {
-	const {cancelOrder, orderRepository} = makeSut();
+	const {cancelOrder, orderRepository} = await makeSut();
 	const now = new Date();
 	const order = new Order('317.153.361-86', now, 'any-code', 'any-destination', OrderStatuses.shipped);
 	await orderRepository.save(order);
@@ -52,13 +52,14 @@ test('Ao cancelar o pedido já enviado, deve retornar erro', async () => {
 });
 
 test('Ao cancelar o pedido deve publicar evento', async () => {
-	const {cancelOrder, orderRepository, queueGateway} = makeSut();
+	const {cancelOrder, orderRepository, queueGateway} = await makeSut();
 	const now = new Date();
 	const order = new Order('317.153.361-86', now, 'any-code', 'any-destination', OrderStatuses.waitingPayment);
 	await orderRepository.save(order);
+	const spy = jest.fn();
+	await queueGateway.on('orderCanceled', 'orderCanceled.test', spy);
 
 	await cancelOrder.execute(order.code);
-	expect(queueGateway.events).toHaveLength(1);
+	expect(spy).toHaveBeenCalled();
 });
-
 

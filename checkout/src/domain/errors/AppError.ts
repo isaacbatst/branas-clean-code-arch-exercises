@@ -3,6 +3,7 @@ export enum AppErrors {
 	validationError = 'validationError',
 	gatewayError = 'gatewayError',
 	conflictError = 'conflictError',
+	expiredError = 'expiredError',
 }
 
 export abstract class AppError extends Error {

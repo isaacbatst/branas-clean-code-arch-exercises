@@ -3,7 +3,7 @@ import type {QueueCallback, QueueGateway} from '../../application/gateway/QueueG
 export abstract class QueueController<T> {
 	protected abstract handler: QueueCallback<T>;
 
-	public register = (event: string, queue: string, queueGateway: QueueGateway) => {
+	public register = async (event: string, queue: string, queueGateway: QueueGateway) => {
 		queueGateway.on<T>(event, queue, this.handler)
 			.catch(err => {
 				console.error('Error registering queue', err);

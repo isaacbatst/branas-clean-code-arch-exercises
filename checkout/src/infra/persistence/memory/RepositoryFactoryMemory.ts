@@ -2,11 +2,11 @@ import type {CouponRepository} from '../../../application/repositories/CouponRep
 import type {OrderProjectionRepository} from '../../../application/repositories/OrderProjectionRepository';
 import type {OrderRepository} from '../../../application/repositories/OrderRepository';
 import type {RepositoryFactory} from '../../../application/repositories/RepositoryFactory';
-import type {OrderRequestRepository} from '../../../application/repositories/RequestedOrderRepository';
+import type {OrderRequestRepository} from '../../../application/repositories/OrderRequestRepository';
 import {CouponRepositoryMemory} from './CouponRepositoryMemory';
 import {OrderProjectionRepositoryMemory} from './OrderProjectionRepositoryMemory';
 import {OrderRepositoryMemory} from './OrderRepositoryMemory';
-import {RequestedOrderRepositoryMemory} from './RequestedOrderRepositoryMemory';
+import {RequestedOrderRepositoryMemory} from './OrderRequestRepositoryMemory';
 
 export class RepositoryFactoryMemory implements RepositoryFactory {
 	readonly couponRepository: CouponRepository;

@@ -10,6 +10,8 @@ async function main() {
 	const gatewayFactory = new GatewayFactoryImpl();
 	const app = new App(gatewayFactory);
 
+	await app.init();
+
 	app.httpServer.listen(Number(process.env.API_PORT));
 }
 

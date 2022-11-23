@@ -59,9 +59,15 @@ model OrderProjection {
   status      OrderStatuses
 }
 
+enum OrderRequestStatuses {
+  waitingToProcess
+  processed
+  failed
+}
+
 model OrderRequest {
-  id    Int      @id @default(autoincrement())
-  date  DateTime
-  year  Int
-  count Int
+  id     Int                  @id @default(autoincrement())
+  date   DateTime
+  code   String               @unique
+  status OrderRequestStatuses
 }

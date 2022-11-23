@@ -1,9 +1,10 @@
-import {OrderRequest} from '../../domain/entities/RequestedOrder';
+import {OrderCodeGenerator} from '../../domain/entities/OrderCodeGenerator';
+import {OrderRequest, OrderRequestStatus} from '../../domain/entities/OrderRequest';
 import {OrderRequested} from '../../domain/events/OrderRequested';
 import type {GatewayFactory} from '../gateway/GatewayFactory';
 import type {QueueGateway} from '../gateway/QueueGateway';
 import type {RepositoryFactory} from '../repositories/RepositoryFactory';
-import type {OrderRequestRepository} from '../repositories/RequestedOrderRepository';
+import type {OrderRequestRepository} from '../repositories/OrderRequestRepository';
 
 type Input = {
 	cpf: string;
@@ -26,13 +27,14 @@ export class RequestCheckout {
 
 	async execute(input: Input) {
 		const now = new Date();
-		const lastRequested = await this.orderRequestRepository.getLastInsertedOnYear(now.getFullYear());
-		const count = lastRequested?.count ?? 0;
-		const orderRequest = new OrderRequest(new Date(), count + 1);
+		const lastRequest = await this.orderRequestRepository.getLastInsertedOnYear(now.getFullYear());
+		const count = lastRequest?.getCount() ?? 0;
+		const orderCode = OrderCodeGenerator.generate(now, count);
+		const orderRequest = new OrderRequest(now, orderCode, OrderRequestStatus.waitingToProcess);
 		await this.orderRequestRepository.save(orderRequest);
 		await this.queueGateway.publish(new OrderRequested({
 			...input,
-			count,
+			orderCode,
 		}));
 	}
 }

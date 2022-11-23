@@ -1,19 +1,16 @@
 import request from 'supertest';
 import {App} from '../../../src/app';
 import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
-import {ItemGatewayFake} from '../../../src/infra/gateway/ItemGatewayFake';
-import {ShippingGatewayFake} from '../../../src/infra/gateway/ShippingGatewayFake';
-import {StockGatewayFake} from '../../../src/infra/gateway/StockGatewayFake';
 
-const makeSut = () => {
+const makeSut = async () => {
 	const gatewayFactory = new GatewayFactoryFake();
 	const app = new App(gatewayFactory);
-
+	await app.init();
 	return app;
 };
 
 test('POST /validate/coupon com cupom válido', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE20'});
@@ -23,7 +20,7 @@ test('POST /validate/coupon com cupom válido', async () => {
 });
 
 test('POST /validate/coupon com cupom expirado', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE40'});
@@ -33,7 +30,7 @@ test('POST /validate/coupon com cupom expirado', async () => {
 });
 
 test('POST /validate/coupon com cupom não existente', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).post('/validate/coupon')
 		.send({coupon: 'VALE30'});

@@ -2,14 +2,15 @@ import request from 'supertest';
 import {App} from '../../../src/app';
 import {GatewayFactoryFake} from '../../../src/infra/gateway/GatewayFactoryFake';
 
-const makeSut = () => {
+const makeSut = async () => {
 	const gatewayFactory = new GatewayFactoryFake();
 	const app = new App(gatewayFactory);
+	await app.init();
 	return app;
 };
 
 test('Ao simular o frete deve retornar valor', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).post('/simulate/shipping')
 		.send({
@@ -25,7 +26,7 @@ test('Ao simular o frete deve retornar valor', async () => {
 });
 
 test('Ao simular frete com produto não existente deve lançar erro', async () => {
-	const app = makeSut();
+	const app = await makeSut();
 
 	const response = await request(app.httpServer.app).post('/simulate/shipping')
 		.send({

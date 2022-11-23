@@ -1,3 +1,5 @@
+import {ConflictError} from '../errors/ConflictError';
+import {ExpiredError} from '../errors/ExpiredError';
 import type Coupon from './Coupon';
 import {CouponValidator} from './CouponValidator';
 import OrderItem from './OrderItem';
@@ -10,7 +12,7 @@ export class OrderFinance {
 		const isSomeEqual = this.orderItems.some(orderItem => orderItem.idItem === item.idItem);
 
 		if (isSomeEqual) {
-			throw new Error('Item duplicado');
+			throw new ConflictError('Item duplicado');
 		}
 
 		this.orderItems.push(new OrderItem(item.idItem, item.price, item.quantity, item.shipping));
@@ -18,7 +20,7 @@ export class OrderFinance {
 
 	addCoupon(coupon: Coupon, date: Date) {
 		if (!CouponValidator.validate(coupon, date)) {
-			throw new Error('Cupom expirado');
+			throw new ExpiredError('Cupom expirado');
 		}
 
 		this.coupon = coupon;
